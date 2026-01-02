@@ -1,0 +1,352 @@
+<Window x:Class="RadiMenu.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:fluent="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+        Title="RadiMenu - Configuración"
+        Width="800" Height="550"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E">
+    
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3E3E42"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Sidebar -->
+        <Border Background="#252526" Padding="0,20">
+            <StackPanel>
+                <TextBlock Text="RadiMenu" 
+                           FontSize="20" 
+                           FontWeight="Bold" 
+                           Foreground="White"
+                           Margin="20,0,0,30"/>
+                
+                <ListBox x:Name="NavList" 
+                         Background="Transparent"
+                         BorderThickness="0"
+                         SelectedIndex="0"
+                         SelectionChanged="NavList_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="Padding" Value="20,12"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#0078D4"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3E3E42"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    
+                    <ListBoxItem Content="General"/>
+                    <ListBoxItem Content="Perfiles"/>
+                    <ListBoxItem Content="Items del Menú"/>
+                    <ListBoxItem Content="Apariencia"/>
+                    <ListBoxItem Content="Acerca de"/>
+                </ListBox>
+                
+                <Button Content="Guardar cambios" 
+                        Click="SaveButton_Click"
+                        Background="#0078D4" 
+                        Margin="20,50,20,0" 
+                        Height="40"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Content area -->
+        <Border Grid.Column="1" Padding="20">
+            <Grid>
+                <!-- GENERAL SETTINGS PANEL -->
+                <StackPanel x:Name="GeneralPanel" Visibility="Visible">
+                     <TextBlock Text="Configuración General" FontSize="24" Foreground="White" Margin="0,0,0,20"/>
+                     
+                     <CheckBox x:Name="StartWithWindowsCheck" 
+                               Content="Iniciar con Windows"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
+
+                     <CheckBox x:Name="CloseOnOutsideCheck" 
+                               Content="Cerrar al hacer clic fuera del menú"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
+
+                     <CheckBox x:Name="GestureActivationCheck" 
+                               Content="Activación por Gesto (Pie Menu)"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                     <StackPanel Orientation="Horizontal" Margin="20,0,0,20">
+                         <TextBlock Text="Tiempo Límite (ms):" Foreground="#AAAAAA" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                         <Slider x:Name="GestureTimeLimitSlider" Width="150" Minimum="200" Maximum="2000" Value="500" TickFrequency="100" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+                         <TextBlock Text="{Binding ElementName=GestureTimeLimitSlider, Path=Value, StringFormat=N0}" Foreground="White" Width="40" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                     </StackPanel>
+
+                      <TextBlock Text="Atajo de Teclado Global" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                      <StackPanel Orientation="Horizontal">
+                          <TextBox x:Name="GlobalHotkeyBox" Width="200" Text="Ctrl + Alt + Space" IsReadOnly="True" Background="#2D2D30"/>
+                          <Button Content="Detectar" Margin="10,0,0,0" Click="DetectHotkey_Click"/>
+                      </StackPanel>
+                </StackPanel>
+
+                <!-- PROFILES PANEL -->
+                <Grid x:Name="ProfilesPanel" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Gestión de Perfiles" FontSize="24" Foreground="White" Margin="0,0,0,20"/>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Profile List -->
+                        <Grid Grid.Column="0" Margin="0,0,20,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <ListBox x:Name="ProfilesListBox" 
+                                     Background="#2D2D30" 
+                                     BorderThickness="0" 
+                                     Foreground="White"
+                                     DisplayMemberPath="Name"
+                                     SelectionChanged="ProfilesListBox_SelectionChanged"/>
+                                     
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
+                                <Button Content="+" Width="30" Click="AddProfile_Click" ToolTip="Crear Perfil"/>
+                                <Button Content="-" Width="30" Click="RemoveProfile_Click" ToolTip="Eliminar Perfil"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- Profile Details -->
+                        <StackPanel Grid.Column="1" x:Name="ProfileDetailsPanel" IsEnabled="False">
+                            <TextBlock Text="Nombre del Perfil" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                            <TextBox x:Name="ProfileNameBox" TextChanged="ProfileNameBox_TextChanged" Margin="0,0,0,15"/>
+                            
+                            <TextBlock Text="Activación Automática (App Trigger)" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                            <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="ProfileTriggerBox" TextChanged="ProfileTriggerBox_TextChanged"/>
+                                <Button Grid.Column="1" Content="..." Width="30" Click="BrowseTrigger_Click" Margin="5,0,0,0"/>
+                            </Grid>
+                            <TextBlock Text="Ej: 'photoshop.exe'. Déjalo vacío para activación manual." Foreground="#666" FontSize="11" Margin="0,0,0,15"/>
+                            
+                            <Button Content="Editar Items de este Perfil" Click="EditProfileItems_Click" Background="#2D2D30" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                            <Button Content="Editar Apariencia de este Perfil" Click="EditProfileAppearance_Click" Background="#2D2D30" HorizontalAlignment="Left" Margin="0,5,0,0"/>
+                            
+                            <TextBlock x:Name="ActiveProfileIndicator" Text="Este perfil está ACTIVO ahora mismo." Foreground="#55FF55" FontWeight="Bold" Margin="0,20,0,0" Visibility="Hidden"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <!-- ITEMS EDITOR PANEL -->
+                <Grid x:Name="ItemsPanel" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Editor de Menú" FontSize="24" Foreground="White" Margin="0,0,0,20"/>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/> <!-- List -->
+                            <ColumnDefinition Width="*"/>   <!-- Details -->
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- List of Items -->
+                        <Grid Grid.Column="0" Margin="0,0,20,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Breadcrumb navigation -->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                                <Button x:Name="BackToParentBtn" Content="← Volver" Click="BackToParent_Click" Visibility="Collapsed" Width="70" Height="24" FontSize="11" Margin="0,0,5,0"/>
+                                <TextBlock x:Name="CurrentLevelLabel" Text="Nivel: Principal" Foreground="#888888" FontSize="11" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <ListBox x:Name="ItemsListBox" 
+                                     Grid.Row="1"
+                                     Background="#2D2D30" 
+                                     BorderThickness="0" 
+                                     Foreground="White"
+                                     DisplayMemberPath="Label"
+                                     SelectionChanged="ItemsListBox_SelectionChanged"/>
+                                     
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
+                                <Button Content="+" Width="30" Click="AddItem_Click" ToolTip="Agregar Item"/>
+                                <Button Content="-" Width="30" Click="RemoveItem_Click" ToolTip="Eliminar Item"/>
+                                <Button x:Name="EditSubItemsBtn" Content="▼" Width="30" Click="EditSubItems_Click" ToolTip="Editar Sub-ítems" IsEnabled="False"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- Item Details -->
+                        <StackPanel Grid.Column="1" x:Name="ItemDetailsPanel" IsEnabled="False">
+                            <TextBlock Text="Etiqueta" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                            <TextBox x:Name="ItemLabelBox" TextChanged="ItemLabelBox_TextChanged" Margin="0,0,0,15"/>
+                            
+                            <TextBlock Text="Icono (Fluent UI Icon Name)" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="ItemIconBox" TextChanged="ItemIconBox_TextChanged"/>
+                                <Button Grid.Column="1" Content="..." Width="30" Click="BrowseIcon_Click" ToolTip="Buscar iconos" Margin="5,0,0,0"/>
+                                <fluent:SymbolIcon x:Name="IconPreview" 
+                                                  Grid.Column="2"
+                                                  FontSize="20" 
+                                                  Foreground="White"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  Margin="10,0,0,0"
+                                                  Width="30"/>
+                            </Grid>
+                            
+                            <TextBlock Text="Acción" Foreground="White" FontSize="16" Margin="0,10,0,10"/>
+                            
+                            <TextBlock Text="Tipo de Acción" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="ActionTypeCombo" Margin="0,0,0,15" SelectionChanged="ActionTypeCombo_SelectionChanged">
+                                <ComboBoxItem Content="Ninguna (Solo Submenú)" IsSelected="True"/>
+                                <ComboBoxItem Content="Simular Teclas (Shortcut)"/>
+                                <ComboBoxItem Content="Ejecutar Comando / App"/>
+                            </ComboBox>
+                            
+                            <StackPanel x:Name="ActionValuePanel">
+                                <TextBlock x:Name="ActionValueLabel" Text="Valor" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="ActionValueBox" TextChanged="ActionValueBox_TextChanged" GotFocus="ActionValueBox_GotFocus" LostFocus="ActionValueBox_LostFocus" PreviewKeyDown="ActionValueBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="1" Content="X" Width="25" Click="ClearHotkey_Click" ToolTip="Limpiar atajo" Margin="5,0,0,0"/>
+                                </Grid>
+                                <TextBlock Text="Ejemplo: 'Ctrl+C' o 'notepad.exe'" Foreground="#666666" FontSize="10" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                
+                <!-- APPEARANCE PANEL -->
+                <StackPanel x:Name="AppearancePanel" Visibility="Collapsed">
+                    <TextBlock Text="Apariencia" FontSize="24" Foreground="White" Margin="0,0,0,20"/>
+                    
+                    <!-- Background Color -->
+                    <TextBlock Text="Color de Fondo" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="BackgroundColorBox" Text="#FF0A0A0A" VerticalContentAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                             <Border Width="30" Height="30" CornerRadius="4" Margin="0,0,5,0" BorderThickness="1" BorderBrush="#555">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding Text, ElementName=BackgroundColorBox}"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Content="..." Width="30" Click="PickBackgroundColor_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Accent Color -->
+                    <TextBlock Text="Color de Acento (Indicador)" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,15">
+                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="AccentColorBox" Text="#FF0078D4" VerticalContentAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                             <Border Width="30" Height="30" CornerRadius="4" Margin="0,0,5,0" BorderThickness="1" BorderBrush="#555">
+                                 <Border.Background>
+                                    <SolidColorBrush Color="{Binding Text, ElementName=AccentColorBox}"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Content="..." Width="30" Click="PickAccentColor_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Indicator Thickness -->
+                    <TextBlock Text="Grosor del Indicador" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="IndicatorThicknessSlider" Minimum="1" Maximum="20" Value="4" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                        <TextBlock Text="{Binding Value, ElementName=IndicatorThicknessSlider}" Foreground="White" HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                    <!-- Center Radius -->
+                    <TextBlock Text="Radio del Centro (Agujero)" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="CenterRadiusSlider" Minimum="20" Maximum="150" Value="45" TickFrequency="5" IsSnapToTickEnabled="True"/>
+                        <TextBlock Text="{Binding Value, ElementName=CenterRadiusSlider}" Foreground="White" HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                     <!-- Ring Thickness -->
+                    <TextBlock Text="Grosor del Anillo (Banda)" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="RingThicknessSlider" Minimum="40" Maximum="200" Value="85" TickFrequency="5" IsSnapToTickEnabled="True"/>
+                        <TextBlock Text="{Binding Value, ElementName=RingThicknessSlider}" Foreground="White" HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                </StackPanel>
+
+                <!-- ABOUT PANEL -->
+                <StackPanel x:Name="AboutPanel" Visibility="Collapsed">
+                    <TextBlock Text="Acerca de RadiMenu" FontSize="24" Foreground="White" Margin="0,0,0,20"/>
+                    <TextBlock Text="Versión 1.0.0" Foreground="#AAAAAA"/>
+                    <TextBlock Text="Clon del Surface Dial para Windows." Foreground="#AAAAAA" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,39 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+D:\code\radimenu\Services\ConfigurationService.cs(23,12): warning CS8618: El elemento propiedad "CurrentSettings" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(31,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(33,51): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(34,40): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(37,70): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(44,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(46,26): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(190,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(192,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(196,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(199,17): error CS0104: 'Application' es una referencia ambigua entre 'System.Windows.Forms.Application' y 'System.Windows.Application' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(204,13): error CS0104: 'MessageBox' es una referencia ambigua entre 'System.Windows.Forms.MessageBox' y 'System.Windows.MessageBox' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(210,9): error CS0104: 'MessageBox' es una referencia ambigua entre 'System.Windows.Forms.MessageBox' y 'System.Windows.MessageBox' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\App.xaml.cs(15,28): warning CS0649: El campo 'App._hotkeyService' nunca se asigna y siempre tendrá el valor predeterminado null [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+
+ERROR al compilar.
+
+D:\code\radimenu\Services\ConfigurationService.cs(23,12): warning CS8618: El elemento propiedad "CurrentSettings" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\App.xaml.cs(15,28): warning CS0649: El campo 'App._hotkeyService' nunca se asigna y siempre tendrá el valor predeterminado null [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(31,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(33,51): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(34,40): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(37,70): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(44,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(46,26): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(190,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(192,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(196,17): error CS0117: 'App' no contiene una definición para 'Config' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(199,17): error CS0104: 'Application' es una referencia ambigua entre 'System.Windows.Forms.Application' y 'System.Windows.Application' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(204,13): error CS0104: 'MessageBox' es una referencia ambigua entre 'System.Windows.Forms.MessageBox' y 'System.Windows.MessageBox' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(210,9): error CS0104: 'MessageBox' es una referencia ambigua entre 'System.Windows.Forms.MessageBox' y 'System.Windows.MessageBox' [D:\code\radimenu\RadiMenu_n5m01nwq_wpftmp.csproj]
+    2 Advertencia(s)
+    13 Errores
+
+Tiempo transcurrido 00:00:01.24

@@ -1,0 +1,59 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "RadiMenu/1.0.0": {
+        "dependencies": {
+          "FluentIcons.Wpf": "2.0.316"
+        },
+        "runtime": {
+          "RadiMenu.dll": {}
+        }
+      },
+      "FluentIcons.Common/2.0.316": {
+        "runtime": {
+          "lib/netstandard2.1/FluentIcons.Common.dll": {
+            "assemblyVersion": "2.0.316.0",
+            "fileVersion": "2.0.316.0"
+          }
+        }
+      },
+      "FluentIcons.Wpf/2.0.316": {
+        "dependencies": {
+          "FluentIcons.Common": "2.0.316"
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/FluentIcons.Wpf.dll": {
+            "assemblyVersion": "2.0.316.0",
+            "fileVersion": "2.0.316.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "RadiMenu/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FluentIcons.Common/2.0.316": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SUsRQfm+jVutoA52jxA9rYiDf1O/1HBn7SpKyU31YbVvOX+lzzSmfeLIPRtdGA9A0c3SXx1B7hneIAFL84tQxw==",
+      "path": "fluenticons.common/2.0.316",
+      "hashPath": "fluenticons.common.2.0.316.nupkg.sha512"
+    },
+    "FluentIcons.Wpf/2.0.316": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FeoyNHbyrD2uIgogyajkPNybDeZqGWZoHpjCeYzwu9L661GC/z7GngHLXKJqykNC9hdWOfvMd3xUHVvly8ZpJg==",
+      "path": "fluenticons.wpf/2.0.316",
+      "hashPath": "fluenticons.wpf.2.0.316.nupkg.sha512"
+    }
+  }
+}

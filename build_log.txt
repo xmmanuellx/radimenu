@@ -1,0 +1,17 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(144,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(184,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(192,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(193,45): error CS0117: 'SweepDirection' no contiene una definición para 'CounterClockwise' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+
+ERROR al compilar.
+
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(144,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(184,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(192,24): error CS0104: 'Size' es una referencia ambigua entre 'System.Drawing.Size' y 'System.Windows.Size' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(193,45): error CS0117: 'SweepDirection' no contiene una definición para 'CounterClockwise' [D:\code\radimenu\RadiMenu_d0ezr2zm_wpftmp.csproj]
+    0 Advertencia(s)
+    4 Errores
+
+Tiempo transcurrido 00:00:01.49

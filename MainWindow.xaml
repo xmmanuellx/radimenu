@@ -1,0 +1,28 @@
+﻿<Window x:Class="RadiMenu.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RadiMenu.Controls"
+        Title="RadiMenu"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        WindowState="Normal"
+        Width="650" Height="650"
+        WindowStartupLocation="Manual"
+        Visibility="Hidden"
+        MouseDown="Window_MouseDown"
+        KeyDown="Window_KeyDown">
+    
+    <!-- Backdrop overlay (Local now) -->
+    <Grid x:Name="BackdropGrid" Background="Transparent">
+        
+        <!-- Radial Menu centered in the window -->
+        <controls:RadialMenu x:Name="RadialMenuControl"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             ItemSelected="RadialMenuControl_ItemSelected"/>
+        
+    </Grid>
+</Window>

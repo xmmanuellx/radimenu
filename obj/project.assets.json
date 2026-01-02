@@ -1,0 +1,138 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0-windows7.0": {
+      "FluentIcons.Common/2.0.316": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/FluentIcons.Common.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/FluentIcons.Common.dll": {}
+        }
+      },
+      "FluentIcons.Wpf/2.0.316": {
+        "type": "package",
+        "dependencies": {
+          "FluentIcons.Common": "[2.0.316]"
+        },
+        "compile": {
+          "lib/net6.0-windows7.0/FluentIcons.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/FluentIcons.Wpf.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      }
+    }
+  },
+  "libraries": {
+    "FluentIcons.Common/2.0.316": {
+      "sha512": "SUsRQfm+jVutoA52jxA9rYiDf1O/1HBn7SpKyU31YbVvOX+lzzSmfeLIPRtdGA9A0c3SXx1B7hneIAFL84tQxw==",
+      "type": "package",
+      "path": "fluenticons.common/2.0.316",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "README.md",
+        "fluenticons.common.2.0.316.nupkg.sha512",
+        "fluenticons.common.nuspec",
+        "lib/netstandard2.0/FluentIcons.Common.dll",
+        "lib/netstandard2.1/FluentIcons.Common.dll"
+      ]
+    },
+    "FluentIcons.Wpf/2.0.316": {
+      "sha512": "FeoyNHbyrD2uIgogyajkPNybDeZqGWZoHpjCeYzwu9L661GC/z7GngHLXKJqykNC9hdWOfvMd3xUHVvly8ZpJg==",
+      "type": "package",
+      "path": "fluenticons.wpf/2.0.316",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "README.md",
+        "fluenticons.wpf.2.0.316.nupkg.sha512",
+        "fluenticons.wpf.nuspec",
+        "lib/net462/FluentIcons.Wpf.dll",
+        "lib/net6.0-windows7.0/FluentIcons.Wpf.dll"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0-windows7.0": [
+      "FluentIcons.Wpf >= 2.0.316"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\xmman\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\code\\radimenu\\RadiMenu.csproj",
+      "projectName": "RadiMenu",
+      "projectPath": "D:\\code\\radimenu\\RadiMenu.csproj",
+      "packagesPath": "C:\\Users\\xmman\\.nuget\\packages\\",
+      "outputPath": "D:\\code\\radimenu\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\xmman\\AppData\\Roaming\\NuGet\\NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0-windows"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0-windows7.0": {
+        "targetAlias": "net8.0-windows",
+        "dependencies": {
+          "FluentIcons.Wpf": {
+            "target": "Package",
+            "version": "[2.0.316, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
