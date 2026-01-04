@@ -1,0 +1,249 @@
+18:12:25.306 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 138.97481786280562, MaxHit: 95
+18:12:25.311 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:25.311 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:26.596 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 135.08515832614626, MaxHit: 95
+18:12:26.597 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:26.597 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:27.900 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 131.59027319676784, MaxHit: 95
+18:12:27.900 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:27.900 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:30.353 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 135.6502856613284, MaxHit: 95
+18:12:30.353 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:30.353 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:33.481 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 125.67418191498204, MaxHit: 95
+18:12:33.481 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:33.481 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:36.162 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 123.97580409095961, MaxHit: 95
+18:12:36.162 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:36.162 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:12:39.683 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 124.82387592123551, MaxHit: 95
+18:12:39.683 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:12:39.683 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:13:38.865 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 137.38267721950973, MaxHit: 95
+18:13:38.870 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:13:38.870 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:13:55.026 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 130.97327971765844, MaxHit: 95
+18:13:55.026 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:13:55.026 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:29.396 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 130.14607178090316, MaxHit: 95
+18:15:29.401 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:29.401 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:31.612 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 142.86357128393507, MaxHit: 95
+18:15:31.612 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:31.612 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:32.919 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 131.47243057006287, MaxHit: 95
+18:15:32.919 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:32.920 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:34.055 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 127.04723531033645, MaxHit: 95
+18:15:34.055 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:34.055 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:35.062 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 151.71684151734772, MaxHit: 95
+18:15:35.062 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:35.063 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:36.233 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 123.94353553130554, MaxHit: 95
+18:15:36.233 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:36.233 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:37.655 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 134.18271125595876, MaxHit: 95
+18:15:37.655 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:37.655 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:40.354 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 144.9310180741169, MaxHit: 95
+18:15:40.354 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:40.354 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:41.236 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 152.12166183683374, MaxHit: 95
+18:15:41.237 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:41.237 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:42.152 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 131.30879635424276, MaxHit: 95
+18:15:42.153 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:15:42.153 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:15:43.054 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 139.44532978913278, MaxHit: 95
+18:15:43.055 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:43.055 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:45.311 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 140.61649974309557, MaxHit: 95
+18:15:45.311 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:45.312 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:47.356 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 145.38225476308997, MaxHit: 95
+18:15:47.357 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:47.357 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:48.658 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 141.90489773083945, MaxHit: 95
+18:15:48.658 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:48.658 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:54.112 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 140.8900280360537, MaxHit: 95
+18:15:54.112 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:54.112 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:56.056 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 136.93794214898952, MaxHit: 95
+18:15:56.056 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:56.056 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:57.688 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 149.9333185119305, MaxHit: 95
+18:15:57.688 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:57.688 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:15:59.663 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 141.0283659410404, MaxHit: 95
+18:15:59.663 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:15:59.663 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:01.008 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 152.59423318068085, MaxHit: 95
+18:16:01.009 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:01.009 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:02.081 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 119.85407794480753, MaxHit: 95
+18:16:02.081 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:02.081 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:03.919 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 101.96568050084302, MaxHit: 95
+18:16:03.919 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:03.919 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:09.592 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 155.05160431288675, MaxHit: 95
+18:16:09.593 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:09.593 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:13.110 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 159.89058759038946, MaxHit: 95
+18:16:13.110 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:13.110 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:14.341 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 111.16204388189342, MaxHit: 95
+18:16:14.342 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:14.342 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:15.887 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 109.14210919713803, MaxHit: 95
+18:16:15.887 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:15.888 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:17.287 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 130.64838307457157, MaxHit: 95
+18:16:17.287 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:16:17.288 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:16:23.921 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 141.50971698084905, MaxHit: 95
+18:16:23.921 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:23.922 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:16:26.642 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 125.23977004130916, MaxHit: 95
+18:16:26.643 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:26.643 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:16:33.666 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 138.19189556555045, MaxHit: 95
+18:16:33.666 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:33.667 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:16:34.885 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 127.63228431709588, MaxHit: 95
+18:16:34.885 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:34.885 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:16:49.183 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 145.90750494748377, MaxHit: 95
+18:16:49.184 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:49.184 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:16:56.088 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 157.07959765672945, MaxHit: 95
+18:16:56.088 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:16:56.089 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:17:00.647 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 138.2931668593933, MaxHit: 95
+18:17:00.647 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:17:00.647 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:17:47.800 [MouseUp-ENTRY] distance=138.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:17:47.805 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 138.19551367537227, MaxHit: 95
+18:17:47.805 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:17:47.805 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:18:15.914 [MouseUp-ENTRY] distance=125.7, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:15.914 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 125.7179382586272, MaxHit: 95
+18:18:15.914 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:18:15.914 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:18:48.858 [MouseUp-ENTRY] distance=70.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:49.814 [MouseUp-ENTRY] distance=59.8, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:50.546 [MouseUp-ENTRY] distance=65.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:51.201 [MouseUp-ENTRY] distance=56.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:51.853 [MouseUp-ENTRY] distance=48.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:52.827 [MouseUp-ENTRY] distance=51.5, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:53.528 [MouseUp-ENTRY] distance=40.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:54.137 [MouseUp-ENTRY] distance=51.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:54.746 [MouseUp-ENTRY] distance=54.3, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:55.337 [MouseUp-ENTRY] distance=47.4, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:55.982 [MouseUp-ENTRY] distance=47.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:56.605 [MouseUp-ENTRY] distance=42.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:57.567 [MouseUp-ENTRY] distance=45.3, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:58.281 [MouseUp-ENTRY] distance=40.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:58.907 [MouseUp-ENTRY] distance=37.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:18:59.543 [MouseUp-ENTRY] distance=36.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:19:00.185 [MouseUp-ENTRY] distance=41.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:19:06.503 [MouseUp-ENTRY] distance=62.3, _maxHitRadius=95.0, SubmenuItemsCount=-1, Dragging=False, SubDrag=False
+18:19:07.453 [MouseUp-ENTRY] distance=75.0, _maxHitRadius=95.0, SubmenuItemsCount=-1, Dragging=False, SubDrag=False
+18:19:09.458 [MouseUp-ENTRY] distance=54.4, _maxHitRadius=95.0, SubmenuItemsCount=-1, Dragging=False, SubDrag=False
+18:26:20.685 [MouseDown] Submenu Capture! dist=129.49517365523704
+18:26:20.773 [MouseUp-ENTRY] distance=130.9, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:20.773 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 130.86252328302402, MaxHit: 95
+18:26:20.773 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:20.773 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:22.516 [MouseDown] Submenu Capture! dist=125.8729518204765
+18:26:22.567 [MouseUp-ENTRY] distance=126.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:22.568 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 126.17844506887855, MaxHit: 95
+18:26:22.568 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:22.568 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:23.772 [MouseDown] Submenu Capture! dist=127.4244874425634
+18:26:23.845 [MouseUp-ENTRY] distance=127.4, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:23.845 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 127.4244874425634, MaxHit: 95
+18:26:23.846 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:26:23.846 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:26:24.833 [MouseDown] Submenu Capture! dist=137.80058055030102
+18:26:24.920 [MouseUp-ENTRY] distance=137.8, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:24.920 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 137.80058055030102, MaxHit: 95
+18:26:24.920 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:24.920 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:27.914 [MouseDown] Submenu Capture! dist=129.71121771072848
+18:26:28.011 [MouseUp-ENTRY] distance=129.7, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:28.011 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 129.71121771072848, MaxHit: 95
+18:26:28.011 [MouseUp] DEBUG TRACE: Selected from Hover Index 0: mute
+18:26:28.011 [MouseUp] DEBUG TRACE: Invoking ItemSelected for mute
+18:26:29.546 [MouseDown] Submenu Capture! dist=153.0130713370593
+18:26:29.640 [MouseUp-ENTRY] distance=153.0, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:29.641 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 153.0130713370593, MaxHit: 95
+18:26:29.641 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:29.641 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:30.568 [MouseDown] Submenu Capture! dist=128.5496013218244
+18:26:30.650 [MouseUp-ENTRY] distance=128.5, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:30.651 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 128.5496013218244, MaxHit: 95
+18:26:30.651 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:30.651 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:31.419 [MouseDown] Submenu Capture! dist=125.92458060283545
+18:26:31.506 [MouseUp-ENTRY] distance=126.8, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:31.506 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 126.84636376341263, MaxHit: 95
+18:26:31.506 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:31.506 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:32.230 [MouseDown] Submenu Capture! dist=130.29965464267354
+18:26:32.314 [MouseUp-ENTRY] distance=130.3, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:32.314 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 130.29965464267354, MaxHit: 95
+18:26:32.315 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:32.315 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:33.046 [MouseDown] Submenu Capture! dist=118.9663818059539
+18:26:33.139 [MouseUp-ENTRY] distance=119.9, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:33.139 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 119.86659251017358, MaxHit: 95
+18:26:33.139 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:33.139 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:33.827 [MouseDown] Submenu Capture! dist=137.08391590555036
+18:26:33.905 [MouseUp-ENTRY] distance=137.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:33.906 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 137.08391590555036, MaxHit: 95
+18:26:33.906 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:33.906 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:34.602 [MouseDown] Submenu Capture! dist=124.48293055676348
+18:26:34.694 [MouseUp-ENTRY] distance=124.9, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:34.694 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 124.88794977899188, MaxHit: 95
+18:26:34.694 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:34.694 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:37.227 [MouseDown] Submenu Capture! dist=126.57408897558773
+18:26:37.302 [MouseUp-ENTRY] distance=126.6, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:37.302 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 126.57408897558773, MaxHit: 95
+18:26:37.302 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:37.302 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:38.098 [MouseDown] Submenu Capture! dist=152.11837495845134
+18:26:38.202 [MouseUp-ENTRY] distance=152.1, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:38.202 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 152.11837495845134, MaxHit: 95
+18:26:38.202 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:38.202 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:26:39.176 [MouseDown] Submenu Capture! dist=128.79829191413992
+18:26:39.280 [MouseUp-ENTRY] distance=128.8, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:26:39.280 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 128.79829191413992, MaxHit: 95
+18:26:39.280 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:26:39.280 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:28:30.621 [MouseDown] Submenu Capture! dist=142.1724305201258
+18:28:30.712 [MouseUp-ENTRY] distance=142.9, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:28:30.713 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 142.89856542317, MaxHit: 95
+18:28:30.713 [MouseUp] DEBUG TRACE: Selected from Hover Index 2: next
+18:28:30.713 [MouseUp] DEBUG TRACE: Invoking ItemSelected for next
+18:28:33.229 [MouseDown] Submenu Capture! dist=120.24142381059865
+18:28:33.332 [MouseUp-ENTRY] distance=120.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:28:33.332 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 120.24142381059865, MaxHit: 95
+18:28:33.333 [MouseUp] DEBUG TRACE: Selected from Hover Index 2: next
+18:28:33.333 [MouseUp] DEBUG TRACE: Invoking ItemSelected for next
+18:28:36.601 [MouseDown] Submenu Capture! dist=126.57408897558773
+18:28:39.240 [MouseUp-ENTRY] distance=121.2, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:28:39.241 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 121.19818480488888, MaxHit: 95
+18:28:39.241 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:28:39.241 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause
+18:28:40.636 [MouseDown] Submenu Capture! dist=122.65398485169571
+18:28:40.722 [MouseUp-ENTRY] distance=122.7, _maxHitRadius=95.0, SubmenuItemsCount=4, Dragging=False, SubDrag=False
+18:28:40.722 [MouseUp] DEBUG TRACE: Inside Submenu Click Zone. Distance: 122.65398485169571, MaxHit: 95
+18:28:40.723 [MouseUp] DEBUG TRACE: Selected from Hover Index 1: play/pause
+18:28:40.723 [MouseUp] DEBUG TRACE: Invoking ItemSelected for play/pause

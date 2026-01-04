@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:RadiMenu.Controls"
         Title="RadiMenu"
+        Icon="{StaticResource AppIconImage}"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"

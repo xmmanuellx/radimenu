@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fluent="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
         Title="RadiMenu - Configuración"
+        Icon="{StaticResource AppIconImage}"
         Width="800" Height="550"
         WindowStartupLocation="CenterScreen"
         Background="#1E1E1E">
@@ -237,6 +238,15 @@
                                                   HorizontalAlignment="Center"
                                                   Margin="10,0,0,0"
                                                   Width="30"/>
+                                <Path x:Name="UniversalIconPreview" 
+                                      Grid.Column="2"
+                                      Width="24" Height="24"
+                                      Fill="White"
+                                      Stretch="Uniform"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Margin="10,0,0,0"
+                                      Visibility="Collapsed"/>
                             </Grid>
                             
                             <TextBlock Text="Acción" Foreground="White" FontSize="16" Margin="0,10,0,10"/>

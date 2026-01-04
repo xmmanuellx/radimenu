@@ -88,6 +88,13 @@ public class ConfigurationService
         }
     }
 
+    public void SaveCurrentProfile()
+    {
+        // Since ActiveProfile is a reference to an object inside CurrentSettings,
+        // we just need to save the whole settings object.
+        SaveSettings();
+    }
+
     private AppSettings CreateDefaultSettings()
     {
         var defaultProfile = CreateDefaultProfile();

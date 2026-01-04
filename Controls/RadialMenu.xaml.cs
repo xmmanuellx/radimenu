@@ -52,14 +52,12 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
     private Path? _submenuHighlight; // Highlight for hovered submenu item
     private bool _wasInCenter = false; // Track if mouse was in center
     
-    // Drag-to-reorder state
-    private bool _isDragging = false;
-    private int _dragSourceIndex = -1;
-    private long _mouseDownTime = 0;
+    // Modular Drag Manager (replaces scattered drag flags)
+    private readonly DragManager _dragManager = new();
+    
+    // Legacy flags (kept temporarily for compatibility during migration)
     private bool _mouseIsDown = false;
-    private const long DragHoldThreshold = 300; // ms before drag activates
-    private bool _isDraggingSubmenuItem = false; // true if dragging in submenu
-    private int _submenuDragSourceIndex = -1;
+    private Point _mouseDownPoint;
     
     public RadialMenu()
     {
@@ -73,6 +71,12 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         RootGrid.MouseMove += RootGrid_MouseMove;
         RootGrid.MouseDown += RootGrid_MouseDown;
         RootGrid.MouseUp += RootGrid_MouseUp;
+        
+        // Wire DragManager events
+        _dragManager.DragActivated += OnDragActivated;
+        _dragManager.ItemsSwapped += OnItemsSwapped;
+        _dragManager.DragFinished += OnDragFinished;
+        _dragManager.DragCanceled += OnDragCanceled;
     }
 
     private void LoadDefaultItems()
@@ -128,12 +132,9 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         _hoveredSubmenuIndex = -1;
         _wasInCenter = false;
         
-        // Reset drag state
-        _isDragging = false;
-        _dragSourceIndex = -1;
+        // Reset drag state via DragManager
+        _dragManager.CancelDrag();
         _mouseIsDown = false;
-        _isDraggingSubmenuItem = false;
-        _submenuDragSourceIndex = -1;
     }
 
     public void ResetGestureTimer()
@@ -290,6 +291,9 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         
         // Render the submenu as an outer ring
         RenderSubmenuRing();
+        
+        // Trigger animation
+        AnimateSubmenuIn();
     }
 
     public void CloseSubmenu()
@@ -358,33 +362,37 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
     {
         if (_submenuItems == null || _submenuItems.Count == 0) return;
         
-        // Sistema de coordenadas:
-        // - rotatedAngle en MouseMove: 0° = arriba, aumenta en sentido horario
-        // - ángulos para dibujar: -90° = arriba en sistema matemático
-        
-        double parentAngle = 360.0 / _items.Count;
-        
-        // El ítem padre ocupa desde (_parentItemIndex * parentAngle) hasta ((_parentItemIndex + 1) * parentAngle)
-        // en el sistema visual (0° = arriba). Para dibujar, restamos 90°.
-        double parentStartVisual = _parentItemIndex * parentAngle; // Inicio en sistema visual
-        double parentStartDraw = parentStartVisual - 90; // Convertir a sistema de dibujo
-        
-        double subAngleStep = parentAngle / _submenuItems.Count;
+        // CLEANUP: Remove ANY existing submenu elements to prevent stacking
+        var existingElements = ItemsCanvas.Children.OfType<FrameworkElement>()
+            .Where(e => e.Tag?.ToString() == "submenu").ToList();
+        foreach (var el in existingElements)
+        {
+            ItemsCanvas.Children.Remove(el);
+        }
+        _submenuItemControls.Clear();
+
+        // FULL 360 LOGIC: Submenu always takes full circle
+        // Items distributed equally starting from top (-90 degrees)
+        double subAngleStep = 360.0 / _submenuItems.Count;
+        double subStartDraw = -90; // Top
         
         double innerR = CenterCircle.Width / 2;
         double thickness = App.Config?.ActiveProfile?.Appearance?.RingThickness ?? 85;
-        double outerRingStart = innerR + thickness + 5;
+        double outerRingStart = innerR + thickness;
         double outerRingThickness = thickness; // Same as main ring
         double submenuIconRadius = outerRingStart + (outerRingThickness / 2);
         
-        // First render background arc (so it's behind icons)
-        RenderSubmenuArc(parentStartDraw, parentAngle, outerRingStart, outerRingThickness);
+        // Render background arc (Full 360)
+        RenderSubmenuArc(subStartDraw, 360.0, outerRingStart, outerRingThickness);
         
-        // Then render icons on top
+        // Render icons
         for (int i = 0; i < _submenuItems.Count; i++)
         {
             var item = _submenuItems[i];
-            double itemAngle = parentStartDraw + (i * subAngleStep) + (subAngleStep / 2);
+            
+            // Calculate center of this specific item's wedge
+            // FIX: Remove half-step offset to align with Top-Centered logic
+            double itemAngle = subStartDraw + (i * subAngleStep);
             
             var menuItemControl = new RadialMenuItem
             {
@@ -411,8 +419,6 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
 
     private void RenderSubmenuArc(double startAngle, double sweepAngle, double radius, double thickness)
     {
-        // Create a path for the submenu arc background
-        // IMPORTANT: IsHitTestVisible = false so it doesn't block mouse events
         var arcPath = new Path
         {
             Fill = MainRing.Fill,
@@ -422,30 +428,47 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         
         double outerRadius = radius + thickness;
         double innerRadius = radius;
+
+        // HANDLE FULL CIRCLE (Donut)
+        // If sweep is ~360, use EllipseGeometry to avoid ArcSegment glitches
+        if (sweepAngle >= 359.9)
+        {
+             var geometry = new PathGeometry { FillRule = FillRule.EvenOdd };
+             
+             // Outer Circle
+             var outer = new EllipseGeometry(new Point(CenterX, CenterY), outerRadius, outerRadius);
+             geometry.AddGeometry(outer);
+             
+             // Inner Circle (Hole)
+             var inner = new EllipseGeometry(new Point(CenterX, CenterY), innerRadius, innerRadius);
+             geometry.AddGeometry(inner);
+             
+             arcPath.Data = geometry;
+        }
+        else
+        {
+            // Standard Arc Logic (Fallback)
+            double startRad = startAngle * Math.PI / 180;
+            double endRad = (startAngle + sweepAngle) * Math.PI / 180;
+            
+            Point outerStart = new Point(CenterX + outerRadius * Math.Cos(startRad), CenterY + outerRadius * Math.Sin(startRad));
+            Point outerEnd = new Point(CenterX + outerRadius * Math.Cos(endRad), CenterY + outerRadius * Math.Sin(endRad));
+            Point innerEnd = new Point(CenterX + innerRadius * Math.Cos(endRad), CenterY + innerRadius * Math.Sin(endRad));
+            Point innerStart = new Point(CenterX + innerRadius * Math.Cos(startRad), CenterY + innerRadius * Math.Sin(startRad));
+            
+            bool isLargeArc = sweepAngle > 180;
+            
+            var geometry = new PathGeometry();
+            var figure = new PathFigure { StartPoint = outerStart, IsClosed = true };
+            figure.Segments.Add(new ArcSegment(outerEnd, new Size(outerRadius, outerRadius), 0, isLargeArc, SweepDirection.Clockwise, true));
+            figure.Segments.Add(new LineSegment(innerEnd, true));
+            figure.Segments.Add(new ArcSegment(innerStart, new Size(innerRadius, innerRadius), 0, isLargeArc, SweepDirection.Counterclockwise, true));
+            geometry.Figures.Add(figure);
+            
+            arcPath.Data = geometry;
+        }
         
-        // Convert to radians
-        double startRad = startAngle * Math.PI / 180;
-        double endRad = (startAngle + sweepAngle) * Math.PI / 180;
-        
-        // Calculate points
-        Point outerStart = new Point(CenterX + outerRadius * Math.Cos(startRad), CenterY + outerRadius * Math.Sin(startRad));
-        Point outerEnd = new Point(CenterX + outerRadius * Math.Cos(endRad), CenterY + outerRadius * Math.Sin(endRad));
-        Point innerEnd = new Point(CenterX + innerRadius * Math.Cos(endRad), CenterY + innerRadius * Math.Sin(endRad));
-        Point innerStart = new Point(CenterX + innerRadius * Math.Cos(startRad), CenterY + innerRadius * Math.Sin(startRad));
-        
-        bool isLargeArc = sweepAngle > 180;
-        
-        var geometry = new PathGeometry();
-        var figure = new PathFigure { StartPoint = outerStart };
-        figure.Segments.Add(new ArcSegment(outerEnd, new Size(outerRadius, outerRadius), 0, isLargeArc, SweepDirection.Clockwise, true));
-        figure.Segments.Add(new LineSegment(innerEnd, true));
-        figure.Segments.Add(new ArcSegment(innerStart, new Size(innerRadius, innerRadius), 0, isLargeArc, SweepDirection.Counterclockwise, true));
-        figure.IsClosed = true;
-        geometry.Figures.Add(figure);
-        
-        arcPath.Data = geometry;
-        
-        // Insert at beginning so it's behind items but the arc is added first before icons
+        // Insert at beginning so it's behind items
         ItemsCanvas.Children.Insert(0, arcPath);
     }
 
@@ -499,6 +522,13 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
 
     private void HoverTimer_Tick(object? sender, EventArgs e)
     {
+        // Guard: Do not open submenu if interaction is locked
+        if (_isContextMenuOpen || _isDialogOpen)
+        {
+            StopHoverTimer();
+            return;
+        }
+
         // Save the index BEFORE stopping the timer (which resets _hoveredIndex)
         int indexToOpen = _hoveredIndex;
         StopHoverTimer();
@@ -745,6 +775,9 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
 
     private void RootGrid_MouseMove(object sender, MouseEventArgs e)
     {
+        // Block interaction if context menu OR dialog is open
+        if (_isContextMenuOpen || _isDialogOpen) return;
+
         var mousePos = e.GetPosition(RootGrid);
         double dx = mousePos.X - CenterX;
         double dy = mousePos.Y - CenterY;
@@ -760,33 +793,40 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         double rotatedAngle = angle + 90;
         if (rotatedAngle >= 360) rotatedAngle -= 360;
         
-        // --- DRAG DETECTION ---
-        if (_mouseIsDown && _dragSourceIndex >= 0 && !_isDragging)
+        // --- DRAG HANDLING VIA DRAGMANAGER ---
+        if (_dragManager.IsActive)
         {
-            long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            if (currentTime - _mouseDownTime >= DragHoldThreshold)
-            {
-                // Activate drag mode
-                _isDragging = true;
-                StartDragFeedback(_dragSourceIndex);
-            }
-        }
-        
-        // If actively dragging, handle reorder logic
-        if (_isDragging && distance >= _minHitRadius && distance <= _maxHitRadius)
-        {
-            // Calculate which position the drag is over
-            double shiftedAngle = rotatedAngle + (step / 2);
-            while (shiftedAngle >= 360) shiftedAngle -= 360;
-            int targetIndex = (int)(shiftedAngle / step);
+            // Try to activate drag if pending
+            _dragManager.TryActivateDrag(mousePos);
             
-            if (targetIndex >= 0 && targetIndex < count && targetIndex != _dragSourceIndex)
+            // If actively dragging, update target
+            if (_dragManager.IsDragging)
             {
-                // Swap items
-                SwapItems(_dragSourceIndex, targetIndex);
-                _dragSourceIndex = targetIndex;
+                int targetIndex = -1;
+                
+                if (_dragManager.Target == DragManager.DragTarget.MainMenu && distance >= _minHitRadius && distance <= _maxHitRadius)
+                {
+                    double shiftedAngle = rotatedAngle + (step / 2);
+                    while (shiftedAngle >= 360) shiftedAngle -= 360;
+                    targetIndex = (int)(shiftedAngle / step);
+                    if (targetIndex < 0 || targetIndex >= count) targetIndex = -1;
+                }
+                else if (_dragManager.Target == DragManager.DragTarget.Submenu && _submenuItems != null)
+                {
+                    double subStep = 360.0 / _submenuItems.Count;
+                    double shiftedAngle = rotatedAngle + (subStep / 2);
+                    while (shiftedAngle >= 360) shiftedAngle -= 360;
+                    targetIndex = (int)(shiftedAngle / subStep);
+                    if (targetIndex < 0 || targetIndex >= _submenuItems.Count) targetIndex = -1;
+                }
+                
+                if (targetIndex >= 0)
+                {
+                    _dragManager.UpdateDragTarget(targetIndex);
+                }
+                
+                return; // Don't process hover while dragging
             }
-            return; // Don't process normal hover while dragging
         }
         // --- END DRAG ---
 
@@ -794,7 +834,8 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         // 2. Handle Submenu Priority
         if (_submenuItems != null)
         {
-            if (distance > _maxHitRadius + 150 || distance < _minHitRadius - 10)
+            // Increased range (300px) to allow easier hovering without being "Infinite"
+            if (distance > _maxHitRadius + 300 || distance < _minHitRadius - 10)
             {
                 CloseSubmenu();
             }
@@ -802,32 +843,24 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
             {
                 _lastMousePos = mousePos;
 
-                // El ítem padre ocupa [_parentItemIndex * step, (_parentItemIndex + 1) * step)
-                // en rotatedAngle (sistema visual). Calculamos ángulo relativo dentro de esa porción.
-                double parentStartVisual = _parentItemIndex * step;
-                double relativeAngle = rotatedAngle - parentStartVisual;
+                // FULL 360 HOVER LOGIC (CENTER ALIGNED)
+                double subStep = 360.0 / _submenuItems.Count;
                 
-                // Normalizar a [0, 360)
-                while (relativeAngle < 0) relativeAngle += 360;
-                while (relativeAngle >= 360) relativeAngle -= 360;
-
-                // Si está dentro del rango [0, step), está sobre el submenú
-                if (relativeAngle < step)
-                {
-                    double subStep = step / _submenuItems.Count;
-                    int subIndex = (int)(relativeAngle / subStep);
-                    if (subIndex < 0) subIndex = 0;
-                    if (subIndex >= _submenuItems.Count) subIndex = _submenuItems.Count - 1;
-                    
-                    if (subIndex != _hoveredSubmenuIndex)
+                // Shift by half step to align with Top-Centered items
+                // This matches RootGrid_MouseUp logic
+                double shiftedAngle = rotatedAngle + (subStep / 2);
+                while (shiftedAngle >= 360) shiftedAngle -= 360;
+                
+                int subIndex = (int)(shiftedAngle / subStep);
+                
+                if (subIndex < 0) subIndex = 0;
+                if (subIndex >= _submenuItems.Count) subIndex = _submenuItems.Count - 1;
+                
+                if (subIndex != _hoveredSubmenuIndex)
                     {
                         SelectSubmenuItem(subIndex);
                     }
-                }
-                else
-                {
-                    if (_hoveredSubmenuIndex != -1) SelectSubmenuItem(-1);
-                }
+
                 return;
             }
         }
@@ -900,10 +933,10 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         
         if (index >= 0 && _submenuItems != null)
         {
-            double parentStep = 360.0 / _items.Count;
-            double subStep = parentStep / _submenuItems.Count;
+            // FULL 360 HIGHLIGHT LOGIC
+            double subStep = 360.0 / _submenuItems.Count;
             
-            double outerRingStart = innerR + ringThickness + 5;
+            double outerRingStart = innerR + ringThickness;
             double outerRingThickness = ringThickness; // Same as main ring
             double indicatorRadius = outerRingStart + outerRingThickness;
             
@@ -926,8 +959,9 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
             UpdateSubmenuHighlightGeometry(_submenuHighlight, subStep, outerRingStart, outerRingThickness);
             
             // Position the highlight at the correct angle
-            double parentStartVisual = _parentItemIndex * parentStep;
-            double targetAngle = parentStartVisual + (index * subStep) + (subStep / 2);
+            // Visual Top is 0, drawing -90. Highlight rotation is Visual.
+            // FIX: Use Start Angle (index * step), NOT Center Angle, because RotateTransform rotates the Start of the arc.
+            double targetAngle = index * subStep;
             
             _submenuHighlight.RenderTransformOrigin = new System.Windows.Point(0, 0);
             Canvas.SetLeft(_submenuHighlight, CenterX);
@@ -1023,40 +1057,80 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         path.Data = geometry;
     }
     
+    private void RootGrid_MouseLeave(object sender, MouseEventArgs e)
+    {
+        // Guard: Do not react if context menu is open
+        if (_isContextMenuOpen || _isDialogOpen) return;
+
+        // Cancel any active drag via DragManager
+        if (_dragManager.IsActive)
+        {
+            _dragManager.CancelDrag();
+        }
+
+        // Clear legacy state
+        _mouseIsDown = false;
+        
+        // Stop timers
+        StopHoverTimer();
+    }
+    
     private void RootGrid_MouseDown(object sender, MouseButtonEventArgs e)
     {
-         if (e.LeftButton != MouseButtonState.Pressed) return;
-         
-         var mousePos = e.GetPosition(RootGrid);
-         double dx = mousePos.X - CenterX;
-         double dy = mousePos.Y - CenterY;
-         double distance = Math.Sqrt(dx * dx + dy * dy);
-         
-         // Record mouse down state for potential drag
-         _mouseIsDown = true;
-         _mouseDownTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-         
-         // Check if in submenu ring first
-         if (_submenuItems != null && _hoveredSubmenuIndex >= 0 && distance > _maxHitRadius)
-         {
-             _submenuDragSourceIndex = _hoveredSubmenuIndex;
-             _dragSourceIndex = -1; // Not dragging main menu
-             RootGrid.CaptureMouse();
-             return;
-         }
-         
-         // If in main ring, capture mouse for drag detection
-         if (distance >= _minHitRadius && distance <= _maxHitRadius && _selectedIndex >= 0)
-         {
-             _dragSourceIndex = _selectedIndex;
-             _submenuDragSourceIndex = -1; // Not dragging submenu
-             RootGrid.CaptureMouse();
-         }
+        if (_isContextMenuOpen || _isDialogOpen) return;
+        if (e.LeftButton != MouseButtonState.Pressed) return;
+        
+        var mousePos = e.GetPosition(RootGrid);
+        double dx = mousePos.X - CenterX;
+        double dy = mousePos.Y - CenterY;
+        double distance = Math.Sqrt(dx * dx + dy * dy);
+        
+        // Legacy for compatibility
+        _mouseIsDown = true;
+        _mouseDownPoint = mousePos;
+        
+        // Calculate angle
+        double angle = Math.Atan2(dy, dx) * 180 / Math.PI;
+        if (angle < 0) angle += 360;
+        double rotatedAngle = angle + 90;
+        while (rotatedAngle >= 360) rotatedAngle -= 360;
+        
+        // Check if in submenu ring
+        if (_submenuItems != null && distance > _maxHitRadius)
+        {
+            double subStep = 360.0 / _submenuItems.Count;
+            double shiftedAngle = rotatedAngle + (subStep / 2);
+            while (shiftedAngle >= 360) shiftedAngle -= 360;
+            int subIndex = (int)(shiftedAngle / subStep);
+            
+            if (subIndex >= 0 && subIndex < _submenuItems.Count)
+            {
+                _dragManager.BeginPotentialDrag(subIndex, mousePos, DragManager.DragTarget.Submenu);
+                RootGrid.CaptureMouse();
+            }
+            return;
+        }
+        
+        // Check if in main ring
+        if (distance >= _minHitRadius && distance <= _maxHitRadius)
+        {
+            double step = 360.0 / _items.Count;
+            double shiftedAngle = rotatedAngle + (step / 2);
+            while (shiftedAngle >= 360) shiftedAngle -= 360;
+            int index = (int)(shiftedAngle / step);
+            
+            if (index >= 0 && index < _items.Count)
+            {
+                _dragManager.BeginPotentialDrag(index, mousePos, DragManager.DragTarget.MainMenu);
+                RootGrid.CaptureMouse();
+            }
+        }
     }
     
     private void RootGrid_MouseUp(object sender, MouseButtonEventArgs e)
     {
-         RootGrid.ReleaseMouseCapture();
+        if (_isContextMenuOpen || _isDialogOpen) return;
+        RootGrid.ReleaseMouseCapture();
          
          var mousePos = e.GetPosition(RootGrid);
          double dx = mousePos.X - CenterX;
@@ -1064,89 +1138,139 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
          double distance = Math.Sqrt(dx * dx + dy * dy);
          
          // DEBUG: Log all state at MouseUp
-         System.Diagnostics.Debug.WriteLine($"[MouseUp] distance={distance:F1}, _maxHitRadius={_maxHitRadius:F1}, submenu={_submenuItems != null}, inSubmenuZone={(distance > _maxHitRadius)}");
+         System.Diagnostics.Debug.WriteLine($"[MouseUp] Btn={e.ChangedButton} distance={distance:F1}, _maxHitRadius={_maxHitRadius:F1}, submenu={_submenuItems != null}, inSubmenuZone={(distance > _maxHitRadius)}");
          
-         // If we were dragging main menu, finish and save
-         if (_isDragging)
+         // Fix for "Flick Execution": If we moved mouse > 10px, treat as DRAG even if _isDragging isn't set.
+         // This handles cases where user cancels (leaves) then releases, or drags fast but _isDragging logic failed.
+         double distMoved = (mousePos - _mouseDownPoint).Length;
+         bool wasMoving = distMoved > 10;
+
+         // --- LEFT CLICK HANDLER (Drag/Execute) ---
+         if (e.ChangedButton == MouseButton.Left)
          {
-             _mouseIsDown = false;
-             FinishDrag();
-             return;
-         }
-         
-         // If we were dragging submenu, finish and save
-         if (_isDraggingSubmenuItem)
-         {
-             _mouseIsDown = false;
-             FinishSubmenuDrag();
-             return;
-         }
-         
-         // Reset drag state
-         _mouseIsDown = false;
-         _dragSourceIndex = -1;
-         _submenuDragSourceIndex = -1;
-         
-         // 1. Submenu Ring Click - calculate the clicked submenu item at click time
-         //    instead of relying on stored _hoveredSubmenuIndex which may be stale
-         if (_submenuItems != null && _submenuItems.Count > 0 && distance > _maxHitRadius)
-         {
-             // Calculate angle to determine which submenu item was clicked
-             double angle = Math.Atan2(dy, dx) * 180 / Math.PI;
-             if (angle < 0) angle += 360;
-             double rotatedAngle = angle + 90;
-             if (rotatedAngle >= 360) rotatedAngle -= 360;
-             
-             int count = _items.Count;
-             double step = 360.0 / count;
-             double parentStartVisual = _parentItemIndex * step;
-             double relativeAngle = rotatedAngle - parentStartVisual;
-             
-             // Normalize to [0, 360)
-             while (relativeAngle < 0) relativeAngle += 360;
-             while (relativeAngle >= 360) relativeAngle -= 360;
-             
-             // Check if within submenu angular range
-             if (relativeAngle < step)
+             // If we were dragging, finish it
+             if (_dragManager.IsDragging)
              {
-                 double subStep = step / _submenuItems.Count;
-                 int subIndex = (int)(relativeAngle / subStep);
-                 if (subIndex < 0) subIndex = 0;
-                 if (subIndex >= _submenuItems.Count) subIndex = _submenuItems.Count - 1;
-                 
-                 System.Diagnostics.Debug.WriteLine($"[MouseUp] Submenu click detected! subIndex={subIndex}, distance={distance}, _maxHitRadius={_maxHitRadius}");
-                 
-                 var item = _submenuItems[subIndex];
-                 if (item.IsSubmenuOnly)
-                 {
-                     OpenSubmenu(item);
-                 }
-                 else
-                 {
-                     ItemSelected?.Invoke(this, item);
-                 }
+                 _mouseIsDown = false;
+                 _dragManager.FinishDrag();
                  return;
              }
-         }
-
-         // 2. Main Ring Click
-         if (distance >= _minHitRadius && distance <= _maxHitRadius)
-         {
-             if (_selectedIndex >= 0 && _selectedIndex < _items.Count)
+             
+             // If we moved significantly but drag didn't activate, cancel silently
+             if (_dragManager.HasMovedSignificantly(mousePos))
              {
-                 var item = _items[_selectedIndex];
-                 if (item.IsSubmenuOnly)
+                 _mouseIsDown = false;
+                 _dragManager.CancelDrag();
+                 return;
+             }
+             
+             // Reset state
+             _mouseIsDown = false;
+             
+             // 1. Submenu Ring Click - calculate the clicked submenu item at click time
+             if (_submenuItems != null && _submenuItems.Count > 0 && distance > _maxHitRadius)
+             {
+                 // FIX: Prioritize the item that is currently highlighted (hovered). 
+                 if (_hoveredSubmenuIndex >= 0 && _hoveredSubmenuIndex < _submenuItems.Count)
                  {
-                     OpenSubmenu(item);
+                     var item = _submenuItems[_hoveredSubmenuIndex];
+                     if (item.IsSubmenuOnly) OpenSubmenu(item);
+                     else ItemSelected?.Invoke(this, item);
+                     return;
                  }
-                 else
+
+                 // Fallback: Calculate angle
+                 double angle = Math.Atan2(dy, dx) * 180 / Math.PI;
+                 if (angle < 0) angle += 360;
+                 double rotatedAngle = angle + 90; // Visual Angle (0=Top)
+                 while (rotatedAngle >= 360) rotatedAngle -= 360;
+                 
+                 // FULL 360 CLICK LOGIC (CENTER ALIGNED)
+                 double subStep = 360.0 / _submenuItems.Count;
+                 
+                 // Normalize to 0-360
+                 while (rotatedAngle < 0) rotatedAngle += 360;
+                 while (rotatedAngle >= 360) rotatedAngle -= 360;
+                 
+                 // Shift by half step to align hit zones with Top-Centered items
+                 // This matches Main Menu logic
+                 double shiftedAngle = rotatedAngle + (subStep / 2);
+                 while (shiftedAngle >= 360) shiftedAngle -= 360;
+                 
+                 int subIndex = (int)(shiftedAngle / subStep);
+                 
+                 if (subIndex >= 0 && subIndex < _submenuItems.Count)
                  {
-                     ItemSelected?.Invoke(this, item);
+                     var item = _submenuItems[subIndex];
+                     if (item.IsSubmenuOnly) OpenSubmenu(item);
+                     else ItemSelected?.Invoke(this, item);
+                     return;
+                 }
+             }
+
+             // 2. Main Ring Click
+             if (distance >= _minHitRadius && distance <= _maxHitRadius)
+             {
+                 if (_selectedIndex >= 0 && _selectedIndex < _items.Count)
+                 {
+                     var item = _items[_selectedIndex];
+                     if (item.IsSubmenuOnly) OpenSubmenu(item);
+                     else ItemSelected?.Invoke(this, item);
+                 }
+             }
+             // Center Click
+             else if (distance < _minHitRadius)
+             {
+                 // Check if we should skip this click (e.g. just toggled config mode)
+                 if (_skipNextCenterClick)
+                 {
+                     _skipNextCenterClick = false;
+                     return;
+                 }
+
+                 // Close menu or back
+                 if (_submenuItems != null) CloseSubmenu();
+                 else 
+                 {
+                     var window = Window.GetWindow(this) as MainWindow;
+                     window?.HideMenu();
                  }
              }
          }
          
-         _dragSourceIndex = -1;
+         // --- RIGHT CLICK HANDLER (Context Menu) ---
+         else if (e.ChangedButton == MouseButton.Right)
+         {
+             // 1. Submenu Item Right Click
+             if (_submenuItems != null && distance > _maxHitRadius)
+             {
+                 int subIndex = -1;
+                 
+                 if (_hoveredSubmenuIndex >= 0 && _hoveredSubmenuIndex < _submenuItems.Count)
+                 {
+                     subIndex = _hoveredSubmenuIndex;
+                 }
+                 // Fallback calc if needed (omitted for brevity, assume hover works well enough for context menu)
+                 
+                 if (subIndex >= 0)
+                 {
+                     ShowContextMenu(_submenuItems[subIndex], subIndex, true);
+                     return;
+                 }
+             }
+             
+             // 2. Main Item Right Click
+             if (distance >= _minHitRadius && distance <= _maxHitRadius)
+             {
+                 if (_selectedIndex >= 0 && _selectedIndex < _items.Count)
+                 {
+                     ShowContextMenu(_items[_selectedIndex], _selectedIndex, false);
+                     return;
+                 }
+             }
+             
+             // 3. Center Right Click? (Maybe Global settings)
+         }
     }
     
     private void StartDragFeedback(int index)
@@ -1233,39 +1357,6 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         AnimateToAngle(targetIndex * (360.0 / _items.Count));
     }
     
-    private void FinishDrag()
-    {
-        _isDragging = false;
-        _dragSourceIndex = -1;
-        
-        // Clear all animations and reset transforms
-        foreach (var control in _menuItemControls)
-        {
-            // Stop any running animations
-            control.BeginAnimation(Canvas.LeftProperty, null);
-            control.BeginAnimation(Canvas.TopProperty, null);
-            control.RenderTransform = null;
-            control.Opacity = 1.0;
-        }
-        
-        // Re-render to fix any position issues
-        RenderItems();
-        
-        // Save the new order to config
-        if (App.Config?.ActiveProfile != null)
-        {
-            App.Config.ActiveProfile.MenuItems = _items;
-            App.Config.SaveSettings();
-        }
-        
-        // Update label and selection
-        if (_selectedIndex >= 0 && _selectedIndex < _items.Count)
-        {
-            SelectionLabel.Text = _items[_selectedIndex].Label;
-            SelectItem(_selectedIndex, false);
-        }
-    }
-    
     private void StartSubmenuDragFeedback(int index)
     {
         // Visual feedback for submenu item
@@ -1340,47 +1431,186 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
         sourceControl.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
         sourceControl.RenderTransform = new ScaleTransform(1.2, 1.2);
         sourceControl.Opacity = 0.8;
+        // Ensure ZIndex
+        Canvas.SetZIndex(sourceControl, 10);
         
         targetControl.RenderTransform = null;
         targetControl.Opacity = 1.0;
+        Canvas.SetZIndex(targetControl, 1);
         
         _hoveredSubmenuIndex = targetIndex;
+        // FIX: Force visual update of the highlight/arc to match the new position
+        SelectSubmenuItem(targetIndex);
+    }
+
+    // ========================================
+    // DragManager Event Handlers
+    // ========================================
+    
+    private void OnDragActivated(int index, DragManager.DragTarget target)
+    {
+        if (target == DragManager.DragTarget.MainMenu)
+        {
+            StartDragFeedback(index);
+        }
+        else if (target == DragManager.DragTarget.Submenu)
+        {
+            StartSubmenuDragFeedback(index);
+        }
     }
     
-    private void FinishSubmenuDrag()
+    private void OnItemsSwapped(int sourceIndex, int targetIndex, DragManager.DragTarget target)
     {
-        _isDraggingSubmenuItem = false;
-        _submenuDragSourceIndex = -1;
-        
-        // Reset visual feedback
-        foreach (var control in _submenuItemControls)
+        if (target == DragManager.DragTarget.MainMenu)
         {
-            control.BeginAnimation(Canvas.LeftProperty, null);
-            control.BeginAnimation(Canvas.TopProperty, null);
-            control.RenderTransform = null;
-            control.Opacity = 1.0;
-        }
-        
-        // Update the parent item's SubItems with the new order
-        if (_parentItemIndex >= 0 && _parentItemIndex < _items.Count && _submenuItems != null)
-        {
-            _items[_parentItemIndex].SubItems = _submenuItems;
+            // Swap in data list
+            var temp = _items[sourceIndex];
+            _items[sourceIndex] = _items[targetIndex];
+            _items[targetIndex] = temp;
             
-            // Save to config
-            if (App.Config?.ActiveProfile != null)
-            {
-                App.Config.ActiveProfile.MenuItems = _items;
-                App.Config.SaveSettings();
-            }
+            // Swap controls for visual animation
+            var sourceControl = _menuItemControls[sourceIndex];
+            var targetControl = _menuItemControls[targetIndex];
+            _menuItemControls[sourceIndex] = targetControl;
+            _menuItemControls[targetIndex] = sourceControl;
+            
+            // Animate positions
+            AnimateSwap(_menuItemControls, sourceIndex, targetIndex, _items.Count);
         }
+        else if (target == DragManager.DragTarget.Submenu && _submenuItems != null)
+        {
+            // Swap in data list
+            var temp = _submenuItems[sourceIndex];
+            _submenuItems[sourceIndex] = _submenuItems[targetIndex];
+            _submenuItems[targetIndex] = temp;
+            
+            // Swap controls
+            var sourceControl = _submenuItemControls[sourceIndex];
+            var targetControl = _submenuItemControls[targetIndex];
+            _submenuItemControls[sourceIndex] = targetControl;
+            _submenuItemControls[targetIndex] = sourceControl;
+            
+            // Animate positions (submenu)
+            AnimateSubmenuSwap(sourceIndex, targetIndex);
+        }
+    }
+    
+    private void OnDragFinished(DragManager.DragTarget target)
+    {
+        ClearDragVisuals(target);
         
-        // Re-render submenu to fix positions
-        RenderSubmenuRing();
+        // Save to config
+        if (App.Config?.ActiveProfile != null)
+        {
+            if (target == DragManager.DragTarget.Submenu && _parentItemIndex >= 0 && _submenuItems != null)
+            {
+                _items[_parentItemIndex].SubItems = _submenuItems;
+            }
+            App.Config.ActiveProfile.MenuItems = _items;
+            App.Config.SaveSettings();
+        }
         
         // Update label
-        if (_hoveredSubmenuIndex >= 0 && _hoveredSubmenuIndex < _submenuItems?.Count)
+        if (target == DragManager.DragTarget.MainMenu && _selectedIndex >= 0 && _selectedIndex < _items.Count)
+        {
+            SelectionLabel.Text = _items[_selectedIndex].Label;
+        }
+        else if (target == DragManager.DragTarget.Submenu && _hoveredSubmenuIndex >= 0 && _submenuItems != null && _hoveredSubmenuIndex < _submenuItems.Count)
         {
             SelectionLabel.Text = _submenuItems[_hoveredSubmenuIndex].Label;
+        }
+    }
+    
+    private void OnDragCanceled(DragManager.DragTarget target)
+    {
+        ClearDragVisuals(target);
+    }
+    
+    private void ClearDragVisuals(DragManager.DragTarget target)
+    {
+        if (target == DragManager.DragTarget.MainMenu)
+        {
+            foreach (var control in _menuItemControls)
+            {
+                control.BeginAnimation(Canvas.LeftProperty, null);
+                control.BeginAnimation(Canvas.TopProperty, null);
+                control.RenderTransform = null;
+                control.Opacity = 1.0;
+            }
+            RenderItems();
+        }
+        else if (target == DragManager.DragTarget.Submenu)
+        {
+            foreach (var control in _submenuItemControls)
+            {
+                control.BeginAnimation(Canvas.LeftProperty, null);
+                control.BeginAnimation(Canvas.TopProperty, null);
+                control.RenderTransform = null;
+                control.Opacity = 1.0;
+                Canvas.SetZIndex(control, 1);
+            }
+            RenderSubmenuRing();
+        }
+    }
+    
+    private void AnimateSwap(List<RadialMenuItem> controls, int idx1, int idx2, int totalCount)
+    {
+        double step = 360.0 / totalCount;
+        double startAngle = -90;
+        
+        var duration = TimeSpan.FromMilliseconds(120);
+        var easing = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+        
+        for (int i = 0; i < controls.Count; i++)
+        {
+            double angle = startAngle + (i * step);
+            double rad = angle * Math.PI / 180;
+            double x = CenterX + (_currentIconRadius * Math.Cos(rad)) - (ItemSize / 2);
+            double y = CenterY + (_currentIconRadius * Math.Sin(rad)) - (ItemSize / 2);
+            
+            controls[i].BeginAnimation(Canvas.LeftProperty, new DoubleAnimation(x, duration) { EasingFunction = easing });
+            controls[i].BeginAnimation(Canvas.TopProperty, new DoubleAnimation(y, duration) { EasingFunction = easing });
+        }
+        
+        // Keep drag feedback on dragged item
+        if (_dragManager.CurrentIndex >= 0 && _dragManager.CurrentIndex < controls.Count)
+        {
+            var ctrl = controls[_dragManager.CurrentIndex];
+            ctrl.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+            ctrl.RenderTransform = new ScaleTransform(1.3, 1.3);
+            ctrl.Opacity = 0.9;
+        }
+    }
+    
+    private void AnimateSubmenuSwap(int idx1, int idx2)
+    {
+        if (_submenuItems == null) return;
+        
+        double subStep = 360.0 / _submenuItems.Count;
+        double subRadius = _maxHitRadius + 50;
+        
+        var duration = TimeSpan.FromMilliseconds(120);
+        var easing = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+        
+        for (int i = 0; i < _submenuItemControls.Count; i++)
+        {
+            double angle = -90 + (i * subStep);
+            double rad = angle * Math.PI / 180;
+            double x = CenterX + (subRadius * Math.Cos(rad)) - (ItemSize / 2);
+            double y = CenterY + (subRadius * Math.Sin(rad)) - (ItemSize / 2);
+            
+            _submenuItemControls[i].BeginAnimation(Canvas.LeftProperty, new DoubleAnimation(x, duration) { EasingFunction = easing });
+            _submenuItemControls[i].BeginAnimation(Canvas.TopProperty, new DoubleAnimation(y, duration) { EasingFunction = easing });
+        }
+        
+        // Keep drag feedback
+        if (_dragManager.CurrentIndex >= 0 && _dragManager.CurrentIndex < _submenuItemControls.Count)
+        {
+            var ctrl = _submenuItemControls[_dragManager.CurrentIndex];
+            ctrl.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+            ctrl.RenderTransform = new ScaleTransform(1.2, 1.2);
+            ctrl.Opacity = 0.8;
+            Canvas.SetZIndex(ctrl, 10);
         }
     }
 
@@ -1475,25 +1705,103 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
     {
         var center = new Point(CenterX, CenterY);
         var distance = Math.Sqrt(Math.Pow(point.X - center.X, 2) + Math.Pow(point.Y - center.Y, 2));
-        return distance <= _maxHitRadius;
+        
+        // Base max radius (Main Menu)
+        double limit = _maxHitRadius;
+        
+        // If submenu is open, extend the hit area
+        if (_submenuItems != null)
+        {
+            // Add Submenu Ring Thickness + padding
+            // Default: MainRing ~130 + 85 = 215
+            // Safe upper bound: MainRing + 150
+            limit += 150; 
+        }
+        
+        return distance <= limit;
     }
 
-    private void CenterCircle_MouseEnter(object sender, MouseEventArgs e) { }
-    private void CenterCircle_MouseLeave(object sender, MouseEventArgs e) { }
-
+    private void CenterCircle_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if (_isContextMenuOpen || _isDialogOpen) return;
+        // Logic to highlight center and deselect rings
+        // ... highlight logic ...
+        System.Diagnostics.Debug.WriteLine("Center Enter");
+        SelectSubmenuItem(-1); // Deselect submenu items logic?
+        
+        // Actually CenterCircle logic:
+        // Usually we deselect radial items or change cursor
+        Mouse.OverrideCursor = System.Windows.Input.Cursors.Hand;
+    }
+    
+    private void CenterCircle_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_isContextMenuOpen || _isDialogOpen) return;
+        Mouse.OverrideCursor = null;
+    }
     private bool _isConfigMode = false;
+    private bool _skipNextCenterClick = false;
+    
+    // Custom Confirmation Dialog State
+    private bool _isDialogOpen = false;
+    private TaskCompletionSource<bool>? _dialogTcs;
+
+    public async Task<bool> ShowConfirmationAsync(string message, string title = "Confirmar")
+    {
+        // 1. Lock Interaction
+        _isDialogOpen = true;
+        
+        // 2. Setup UI
+        ConfirmationOverlay.Visibility = Visibility.Visible;
+        DialogTitle.Text = title;
+        DialogMessage.Text = message;
+        
+        // 3. Create Task
+        _dialogTcs = new TaskCompletionSource<bool>();
+        
+        // 4. Wait for user
+        bool result = await _dialogTcs.Task;
+        
+        // 5. Cleanup
+        ConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _isDialogOpen = false;
+        _dialogTcs = null;
+        
+        return result;
+    }
+
+    private void BtnConfirm_Click(object sender, RoutedEventArgs e)
+    {
+        _dialogTcs?.TrySetResult(true);
+    }
+
+    private void BtnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        _dialogTcs?.TrySetResult(false);
+    }
 
     private void CenterCircle_MouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (_isContextMenuOpen || _isDialogOpen) return;
+        
+        // Prevent event from bubbling to RootGrid if needed, 
+        // but mainly we want to signal MouseUp to ignore the release action
+        
         // If we're in a submenu, go back to parent menu
         if (CanGoBack)
         {
             GoBack();
+            e.Handled = true;
             return;
         }
         
         // Otherwise toggle config mode
         ToggleConfigMode();
+        
+        // Flag to prevent RootGrid_MouseUp from processing this as a "Close Menu" or "Back" click
+        // immediately after we switched modes.
+        _skipNextCenterClick = true;
+        e.Handled = true; 
     }
 
     private void ToggleConfigMode()
@@ -1615,5 +1923,195 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
          
          // Exit config mode so next open is normal
          _isConfigMode = false;
+    }
+
+    public void RefreshMenu()
+    {
+        CloseSubmenu();
+        LoadDefaultItems();
+        RenderItems();
+    }
+
+    // --- CONTEXT MENU LOGIC ---
+
+    private bool _isContextMenuOpen = false;
+
+    private void ShowContextMenu(RadiMenu.Models.MenuItem item, int index, bool isSubmenu)
+    {
+        // Lock interaction immediately
+        _isContextMenuOpen = true;
+
+        var cm = new ContextMenu();
+        // Remove Opened handler as we set it manually
+        cm.Closed += (s, e) => {
+            _isContextMenuOpen = false;
+        };
+        
+        // Header (Label)
+        var header = new System.Windows.Controls.MenuItem { Header = string.IsNullOrEmpty(item.Label) ? "Item" : item.Label, IsEnabled = false, FontWeight = FontWeights.Bold };
+        cm.Items.Add(header);
+        cm.Items.Add(new Separator());
+
+        // 1. Insert Item
+        var add = new System.Windows.Controls.MenuItem { Header = "Insertar Item Aquí" };
+        add.Click += (s, e) => InsertItemAction(index, isSubmenu);
+        cm.Items.Add(add);
+
+        // 2. Change Icon
+        var icon = new System.Windows.Controls.MenuItem { Header = "Cambiar Icono" };
+        icon.Click += (s, e) => ChangeIconAction(item);
+        cm.Items.Add(icon);
+
+        // 3. Edit (Label/Path)
+        var edit = new System.Windows.Controls.MenuItem { Header = "Editar..." };
+        edit.Click += (s, e) => EditItemAction(item);
+        cm.Items.Add(edit);
+
+        // 4. Submenu Toggle
+        var sub = new System.Windows.Controls.MenuItem { Header = item.HasSubItems ? "Eliminar Submenú" : "Convertir en Submenú" };
+        sub.Click += (s, e) => ToggleSubmenuAction(item);
+        cm.Items.Add(sub);
+
+        cm.Items.Add(new Separator());
+
+        // 6. Delete
+        var del = new System.Windows.Controls.MenuItem { Header = "Eliminar", Foreground = System.Windows.Media.Brushes.Red };
+        del.Click += (s, e) => DeleteItemAction(item, isSubmenu);
+        cm.Items.Add(del);
+
+        // Styling is now handled by App.xaml resources
+        cm.IsOpen = true;
+    }
+
+
+
+    private void InsertItemAction(int index, bool isSubmenu)
+    {
+        // Add new item after current index
+        var newItem = new RadiMenu.Models.MenuItem { Label = "Nuevo", Icon = "Add", AppPath = "" };
+        
+        if (isSubmenu)
+        {
+             if (_submenuItems == null) return;
+             int target = index + 1;
+             if (target > _submenuItems.Count) target = _submenuItems.Count; // Append
+             
+             _submenuItems.Insert(target, newItem);
+             
+             // Sync back to parent item
+             if (_parentItemIndex >= 0 && _parentItemIndex < _items.Count)
+             {
+                 _items[_parentItemIndex].SubItems = _submenuItems;
+             }
+
+             RenderSubmenuRing();
+        }
+        else
+        {
+             if (App.Config?.ActiveProfile?.MenuItems == null) return;
+             int target = index + 1;
+             if (target > App.Config.ActiveProfile.MenuItems.Count) target = App.Config.ActiveProfile.MenuItems.Count;
+             
+             App.Config.ActiveProfile.MenuItems.Insert(target, newItem);
+             RefreshMenu();
+        }
+        App.Config.SaveCurrentProfile();
+    }
+
+
+
+
+    private async void DeleteItemAction(RadiMenu.Models.MenuItem item, bool isSubmenu)
+    {
+        if (!await ShowConfirmationAsync("¿Está seguro de que desea eliminar este ítem?", "Eliminar"))
+        {
+            return;
+        }
+
+        if (isSubmenu)
+        {
+            if (_submenuItems != null)
+            {
+                _submenuItems.Remove(item);
+                
+                // Sync back to parent item
+                if (_parentItemIndex >= 0 && _parentItemIndex < _items.Count)
+                {
+                    _items[_parentItemIndex].SubItems = _submenuItems;
+                }
+
+                if (_submenuItems.Count == 0) CloseSubmenu();
+                else RenderSubmenuRing();
+            }
+        }
+        else
+        {
+             if (App.Config?.ActiveProfile?.MenuItems != null)
+             {
+                 App.Config.ActiveProfile.MenuItems.Remove(item);
+                 RefreshMenu();
+             }
+        }
+        App.Config.SaveCurrentProfile();
+    }
+
+    private void ChangeIconAction(RadiMenu.Models.MenuItem item)
+    {
+        var parentWindow = Window.GetWindow(this);
+        var picker = new RadiMenu.Views.IconPickerWindow { Owner = parentWindow };
+        
+        if (picker.ShowDialog() == true && picker.SelectedIconName != null)
+        {
+            item.Icon = picker.SelectedIconName; 
+            
+            // Clear AppPath/Command if needed/desired? 
+            // The logic in Settings priorities Icon property if present. 
+            // We'll keep existing AppPath just in case they switch back later or it's used for execution.
+            
+            if (_submenuItems != null && _submenuItems.Contains(item)) RenderSubmenuRing();
+            else RefreshMenu();
+            
+            App.Config.SaveCurrentProfile();
+        }
+    }
+
+    private async void ToggleSubmenuAction(RadiMenu.Models.MenuItem item)
+    {
+        if (item.HasSubItems)
+        {
+            if (await ShowConfirmationAsync("¿Eliminar todos los sub-ítems?", "Confirmar"))
+            {
+                item.SubItems = null;
+            }
+        }
+        else
+        {
+            item.SubItems = new List<RadiMenu.Models.MenuItem>
+            {
+                new RadiMenu.Models.MenuItem { Label = "Sub 1", Icon = "Asterisk" },
+                new RadiMenu.Models.MenuItem { Label = "Sub 2", Icon = "Asterisk" }
+            };
+        }
+        RefreshMenu();
+        App.Config.SaveCurrentProfile();
+    }
+
+    private void EditItemAction(RadiMenu.Models.MenuItem item)
+    {
+        var setWin = new RadiMenu.Views.SettingsWindow();
+        setWin.Show();
+    }
+
+    // Helper class for FontIcon in ContextMenu
+    private class FontIcon : TextBlock
+    {
+        public string Glyph { set { Text = value; } }
+        public FontIcon()
+        {
+            FontFamily = new System.Windows.Media.FontFamily("Segoe MDL2 Assets");
+            FontSize = 14;
+            VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+        }
     }
 }

@@ -8,6 +8,96 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/RadialMenuStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- App Icon Geometry -->
+            <CombinedGeometry x:Key="AppIconGeometry" GeometryCombineMode="Exclude">
+                <CombinedGeometry.Geometry1>
+                    <StreamGeometry>M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z</StreamGeometry>
+                </CombinedGeometry.Geometry1>
+                <CombinedGeometry.Geometry2>
+                    <GeometryGroup>
+                         <!-- Vertical Cut -->
+                        <RectangleGeometry Rect="11,-1,2,26"/>
+                        <!-- Horizontal Cut -->
+                        <RectangleGeometry Rect="-1,11,26,2"/>
+                        <!-- 45 Deg Cut -->
+                        <RectangleGeometry Rect="11,-1,2,26">
+                            <RectangleGeometry.Transform>
+                                <RotateTransform Angle="45" CenterX="12" CenterY="12"/>
+                            </RectangleGeometry.Transform>
+                        </RectangleGeometry>
+                        <!-- -45 Deg Cut -->
+                        <RectangleGeometry Rect="11,-1,2,26">
+                            <RectangleGeometry.Transform>
+                                <RotateTransform Angle="-45" CenterX="12" CenterY="12"/>
+                            </RectangleGeometry.Transform>
+                        </RectangleGeometry>
+                    </GeometryGroup>
+                </CombinedGeometry.Geometry2>
+            </CombinedGeometry>
+            
+            <DrawingImage x:Key="AppIconImage">
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Geometry="{StaticResource AppIconGeometry}" Brush="White"/>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <!-- DARK CONTEXT MENU STYLE -->
+            <Style TargetType="{x:Type ContextMenu}">
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+                <Setter Property="HasDropShadow" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ContextMenu}">
+                            <Border x:Name="Border" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3C3C3C">
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="HasDropShadow" Value="true">
+                                    <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
+                                    <Setter TargetName="Border" Property="CornerRadius" Value="4" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type MenuItem}">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type MenuItem}">
+                            <Border x:Name="Border" Padding="15,5,15,5" BorderThickness="0" Background="Transparent" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" TextBlock.Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#3C3C3C"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+             
+            <Style TargetType="{x:Type Separator}">
+                 <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Separator}">
+                            <Border BorderThickness="0,1,0,0" BorderBrush="#3C3C3C" Margin="0,4,0,4" SnapsToDevicePixels="true"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

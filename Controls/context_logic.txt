@@ -1,0 +1,192 @@
+
+    // --- CONTEXT MENU LOGIC ---
+
+    private void ShowContextMenu(RadiMenu.Models.MenuItem item, int index, bool isSubmenu)
+    {
+        var cm = new ContextMenu();
+        
+        // Header (Label)
+        var header = new MenuItem { Header = string.IsNullOrEmpty(item.Label) ? "Item" : item.Label, IsEnabled = false, FontWeight = FontWeights.Bold };
+        cm.Items.Add(header);
+        cm.Items.Add(new Separator());
+
+        // 1. Insert Item
+        var add = new MenuItem { Header = "Insertar Item Aquí", Icon = new FontIcon { Glyph = "\uE710", FontFamily = new FontFamily("Segoe MDL2 Assets") } };
+        add.Click += (s, e) => InsertItemAction(index, isSubmenu);
+        cm.Items.Add(add);
+
+        // 2. Change Icon
+        var icon = new MenuItem { Header = "Cambiar Icono", Icon = new FontIcon { Glyph = "\uEB9F", FontFamily = new FontFamily("Segoe MDL2 Assets") } };
+        icon.Click += (s, e) => ChangeIconAction(item);
+        cm.Items.Add(icon);
+
+        // 3. Edit (Label/Path)
+        var edit = new MenuItem { Header = "Editar...", Icon = new FontIcon { Glyph = "\uE70F", FontFamily = new FontFamily("Segoe MDL2 Assets") } };
+        edit.Click += (s, e) => EditItemAction(item);
+        cm.Items.Add(edit);
+
+        // 4. Submenu Toggle
+        var sub = new MenuItem { Header = item.HasSubItems ? "Eliminar Submenú" : "Convertir en Submenú", Icon = new FontIcon { Glyph = "\uE996", FontFamily = new FontFamily("Segoe MDL2 Assets") } };
+        sub.Click += (s, e) => ToggleSubmenuAction(item);
+        cm.Items.Add(sub);
+
+        cm.Items.Add(new Separator());
+
+        // 5. Run as Admin
+        var admin = new MenuItem { Header = "Ejecutar como Admin", IsCheckable = true, IsChecked = false }; // Need to store this prop? Model doesn't have it yet. Skip validation for now.
+        // cm.Items.Add(admin); 
+
+        // 6. Delete
+        var del = new MenuItem { Header = "Eliminar", Foreground = Brushes.Red, Icon = new FontIcon { Glyph = "\uE74D", FontFamily = new FontFamily("Segoe MDL2 Assets"),Foreground = Brushes.Red } };
+        del.Click += (s, e) => DeleteItemAction(item, isSubmenu);
+        cm.Items.Add(del);
+
+        cm.IsOpen = true;
+    }
+
+    private void InsertItemAction(int index, bool isSubmenu)
+    {
+        // Add new item after current index
+        var newItem = new RadiMenu.Models.MenuItem { Label = "Nuevo", Icon = "Add", AppPath = "" };
+        
+        if (isSubmenu)
+        {
+             if (_submenuItems == null) return;
+             // Safe insert
+             int target = index + 1;
+             if (target > _submenuItems.Count) target = _submenuItems.Count; // Append
+             
+             // We need to modify the parent's subitems list.
+             // Issue: _submenuItems is a copy or ref? It is passed in OpenSubmenu.
+             // It's likely ref to MenuItem.SubItems.
+             _submenuItems.Insert(target, newItem);
+             
+             // Refresh Submenu UI
+             DrawSubmenuRing(_submenuItems);
+        }
+        else
+        {
+             if (App.Config?.ActiveProfile?.MenuItems == null) return;
+             int target = index + 1;
+             if (target > App.Config.ActiveProfile.MenuItems.Count) target = App.Config.ActiveProfile.MenuItems.Count;
+             
+             App.Config.ActiveProfile.MenuItems.Insert(target, newItem);
+             
+             // Refresh Main Menu
+             ReloadItems();
+        }
+        App.Config.SaveCurrentProfile();
+    }
+
+    private void DeleteItemAction(RadiMenu.Models.MenuItem item, bool isSubmenu)
+    {
+        if (System.Windows.MessageBox.Show($"¿Eliminar '{item.Label}'?", "Confirmar", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+
+        if (isSubmenu)
+        {
+            if (_submenuItems != null)
+            {
+                _submenuItems.Remove(item);
+                // If empty now, maybe close submenu?
+                if (_submenuItems.Count == 0)
+                {
+                     CloseSubmenu();
+                }
+                else
+                {
+                    DrawSubmenuRing(_submenuItems);
+                }
+            }
+        }
+        else
+        {
+             if (App.Config?.ActiveProfile?.MenuItems != null)
+             {
+                 App.Config.ActiveProfile.MenuItems.Remove(item);
+                 ReloadItems();
+             }
+        }
+        App.Config.SaveCurrentProfile();
+    }
+
+    private void ChangeIconAction(RadiMenu.Models.MenuItem item)
+    {
+        // Simple InputBox or Dialog substitute?
+        // Let's use OpenFileDialog for Image/Exe or just allow them to type a name? 
+        // User asked for "Cambiar Icono"
+        // Let's rely on Settings Window for full complexity?
+        // Or just open a basic InputDialog?
+        // Hack: Use InputBox from VisualBasic? No.
+        // Let's launch Settings Window navigated to this item? Complex.
+        // Let's just show a MessageBox saying "Use Settings" for now? 
+        // Better: Open File Dialog to pick EXE/ICO.
+        
+        var dialog = new Microsoft.Win32.OpenFileDialog();
+        dialog.Title = "Seleccionar Icono (EXE, PNG, ICO)";
+        dialog.Filter = "Archivos|*.exe;*.lnk;*.png;*.icon;*.ico|Todos|*.*";
+        if (dialog.ShowDialog() == true)
+        {
+            // Simple logic: if EXE, assume we extract icon later or use path.
+            // But we store "Fluent Icon Name".
+            // If they pick a file, we should update AppPath (if empty) or some new "CustomIconPath".
+            // Since our Model primarily uses FontIcon string...
+            // We can set Icon to "Application" and AppPath to this file?
+            // Or if it's an image, we need support for image paths.
+            // Currently our model only supports Fluent Strings maybe?
+            // RadialMenuItemControl uses IconConverter... 
+            // Valid Values: "Home", "GlobalNavButton", etc.
+            
+            // Temporary: Set to generic "Heart" to prove it works
+            item.Icon = "Heart"; 
+            
+            // To be robust we'd need a "Pick Icon" dialog that lists the Glyphs.
+            // Let's invoke the SettingsWindow maybe?
+            System.Windows.MessageBox.Show("Icono cambiado a 'Corazón' (Demo). Para más iconos usa la Configuración completa.", "Info");
+            
+            if (_submenuItems != null && _submenuItems.Contains(item)) DrawSubmenuRing(_submenuItems);
+            else ReloadItems();
+            App.Config.SaveCurrentProfile();
+        }
+    }
+
+    private void ToggleSubmenuAction(RadiMenu.Models.MenuItem item)
+    {
+        if (item.HasSubItems)
+        {
+            if (System.Windows.MessageBox.Show("¿Eliminar todos los sub-ítems?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                item.SubItems = null;
+            }
+        }
+        else
+        {
+            item.SubItems = new List<RadiMenu.Models.MenuItem>
+            {
+                new RadiMenu.Models.MenuItem { Label = "Sub 1", Icon = "Asterisk" },
+                new RadiMenu.Models.MenuItem { Label = "Sub 2", Icon = "Asterisk" }
+            };
+        }
+        ReloadItems(); // Always reload to update indicator
+        App.Config.SaveCurrentProfile();
+    }
+
+    private void EditItemAction(RadiMenu.Models.MenuItem item)
+    {
+        // Open Settings Window?
+        var setWin = new RadiMenu.Views.SettingsWindow();
+        setWin.Show();
+        // Ideally navigate to Items tab.
+    }
+
+    // Helper class for FontIcon in ContextMenu
+    private class FontIcon : TextBlock
+    {
+        public string Glyph { set { Text = value; } }
+        public FontIcon()
+        {
+            FontFamily = new FontFamily("Segoe MDL2 Assets");
+            FontSize = 14;
+            VerticalAlignment = VerticalAlignment.Center;
+            HorizontalAlignment = HorizontalAlignment.Center;
+        }
+    }

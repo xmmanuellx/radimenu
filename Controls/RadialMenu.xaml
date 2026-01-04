@@ -4,7 +4,11 @@
              Width="500" Height="500">
     <!-- Increased size slightly to accommodate larger hit area if needed, keeping visual size same via Elements -->
     
-    <Grid x:Name="RootGrid" RenderTransformOrigin="0.5,0.5" Background="Transparent">
+    <Grid x:Name="RootGrid" RenderTransformOrigin="0.5,0.5" Background="Transparent"
+          MouseMove="RootGrid_MouseMove"
+          MouseDown="RootGrid_MouseDown"
+          MouseUp="RootGrid_MouseUp"
+          MouseLeave="RootGrid_MouseLeave">
         <Grid.RenderTransform>
             <ScaleTransform x:Name="MenuScale" ScaleX="1" ScaleY="1"/>
         </Grid.RenderTransform>
@@ -82,5 +86,77 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    IsHitTestVisible="False"/>
+
+        <!-- CUSTOM CONFIRMATION DIALOG OVERLAY -->
+        <Grid x:Name="ConfirmationOverlay" 
+              Visibility="Collapsed" 
+              HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch"
+              Background="Transparent">
+            <!-- Dialog Box -->
+            <Border Width="300" Height="150" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3C3C3C" 
+                    BorderThickness="1" 
+                    CornerRadius="8"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="5" Opacity="0.5"/>
+                </Border.Effect>
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Title -->
+                    <TextBlock x:Name="DialogTitle" 
+                               Text="Confirmar" 
+                               Foreground="White" 
+                               FontWeight="Bold" 
+                               FontSize="16"
+                               HorizontalAlignment="Left"/>
+                    
+                    <!-- Message -->
+                    <TextBlock x:Name="DialogMessage" 
+                               Text="¿Está seguro?" 
+                               Foreground="#DDDDDD" 
+                               FontSize="14" 
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Grid.Row="1"
+                               Margin="0,10"/>
+                    
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,5,0,0">
+                        <Button x:Name="BtnCancel" 
+                                Content="Cancelar" 
+                                Width="80" Height="30"
+                                Margin="0,0,10,0"
+                                Background="Transparent"
+                                Foreground="#AAAAAA"
+                                BorderThickness="0"
+                                Click="BtnCancel_Click"/>
+                                
+                        <Button x:Name="BtnConfirm" 
+                                Content="Confirmar" 
+                                Width="80" Height="30" 
+                                Background="#0078D4"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Click="BtnConfirm_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

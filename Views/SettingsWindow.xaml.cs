@@ -214,6 +214,7 @@ public partial class SettingsWindow : Window
         _hookService.KeyIntercepted += OnKeyIntercepted;
         _hookService.Start();
         _isRecording = true;
+        _pressedKeys.Clear();
         
         ActionValueBox.Text = "Presiona teclas...";
         ActionValueBox.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
@@ -231,29 +232,36 @@ public partial class SettingsWindow : Window
             _hookService = null;
         }
         _isRecording = false;
+        _pressedKeys.Clear();
         ActionValueBox.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
         
         // Restore if empty? No, let it be.
     }
 
+    private HashSet<Key> _pressedKeys = new HashSet<Key>();
+
     private void OnKeyIntercepted(Key key, bool isDown)
     {
-         if (!isDown) return;
+         // Update state
+         if (isDown) _pressedKeys.Add(key);
+         else _pressedKeys.Remove(key);
          
-         // Ignore "System" dummy key
+         if (!isDown) return; // Only update UI on KeyDown
+         
+         // Ignore "System" dummy key IF it is just that generic one, but usually we get specific keys.
          if (key == Key.System) return; 
 
          Dispatcher.Invoke(() =>
          {
              var modifiers = new List<string>();
              
-             // Check modifiers actively
-             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) modifiers.Add("Ctrl");
-             if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add("Alt");
-             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) modifiers.Add("Shift");
-             if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add("Win");
+             // Check modifiers actively from our local state
+             if (_pressedKeys.Contains(Key.LeftCtrl) || _pressedKeys.Contains(Key.RightCtrl)) modifiers.Add("Ctrl");
+             if (_pressedKeys.Contains(Key.LeftAlt) || _pressedKeys.Contains(Key.RightAlt)) modifiers.Add("Alt");
+             if (_pressedKeys.Contains(Key.LeftShift) || _pressedKeys.Contains(Key.RightShift)) modifiers.Add("Shift");
+             if (_pressedKeys.Contains(Key.LWin) || _pressedKeys.Contains(Key.RWin)) modifiers.Add("Win");
              
-             // If key is Modifier itself, don't double add, but it's fine for "Ctrl" display
+             // If key is Modifier itself, don't double add
              string keyStr = key.ToString();
              
              if (key == Key.LeftCtrl || key == Key.RightCtrl) keyStr = "";
@@ -269,13 +277,7 @@ public partial class SettingsWindow : Window
                  if (finalCombo.Length > 0) finalCombo += "+";
                  finalCombo += keyStr;
                  
-                 // If we have a non-modifier key, we consider the shortcut "Complete" and stop recording?
-                 // Or we let them type until they leave focus? 
-                 // Live update is better.
                  ActionValueBox.Text = finalCombo;
-                 
-                 // Optional: Stop recording automatically if it looks complete?
-                 // No, users might want "Ctrl+Shift+..."
              }
              else
              {
@@ -617,21 +619,54 @@ public partial class SettingsWindow : Window
         UpdateIconPreview();
     }
 
-    private void UpdateIconPreview()
+    private async void UpdateIconPreview()
     {
         if (IconPreview == null) return;
 
         string iconName = ItemIconBox.Text;
         
-        if (System.Enum.TryParse<FluentIcons.Common.Symbol>(iconName, out var symbol))
+        // System.Diagnostics.Debug.WriteLine($"UpdateIconPreview: {iconName}");
+
+        if (!string.IsNullOrEmpty(iconName) && iconName.Contains(":"))
         {
-            IconPreview.Symbol = symbol;
-            IconPreview.Visibility = Visibility.Visible;
+             // Universal Icon
+             IconPreview.Visibility = Visibility.Collapsed;
+             UniversalIconPreview.Visibility = Visibility.Visible;
+             
+             try
+             {
+                 var service = new RadiMenu.Services.IconifyService();
+                 var data = await service.GetIconDataAsync(iconName);
+                 
+                 if (data != null)
+                 {
+                     string pathData = service.ExtractPathData(data.Body);
+                     if (!string.IsNullOrEmpty(pathData))
+                     {
+                         UniversalIconPreview.Data = System.Windows.Media.Geometry.Parse(pathData);
+                     }
+                 }
+             }
+             catch
+             {
+                UniversalIconPreview.Data = null;
+             }
         }
         else
         {
-            IconPreview.Symbol = FluentIcons.Common.Symbol.Question;
-            IconPreview.Visibility = string.IsNullOrEmpty(iconName) ? Visibility.Collapsed : Visibility.Visible;
+            // Fluent Icon
+            UniversalIconPreview.Visibility = Visibility.Collapsed;
+            
+            if (System.Enum.TryParse<FluentIcons.Common.Symbol>(iconName, out var symbol))
+            {
+                IconPreview.Symbol = symbol;
+                IconPreview.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                IconPreview.Symbol = FluentIcons.Common.Symbol.Question;
+                IconPreview.Visibility = string.IsNullOrEmpty(iconName) ? Visibility.Collapsed : Visibility.Visible;
+            }
         }
     }
 }

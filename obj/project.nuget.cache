@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "y3+N3bm72GM=",
+  "dgSpecHash": "LzfSb8uPuQg=",
   "success": true,
   "projectFilePath": "D:\\code\\radimenu\\RadiMenu.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xmman\\.nuget\\packages\\fluenticons.common\\2.0.316\\fluenticons.common.2.0.316.nupkg.sha512",
-    "C:\\Users\\xmman\\.nuget\\packages\\fluenticons.wpf\\2.0.316\\fluenticons.wpf.2.0.316.nupkg.sha512"
+    "C:\\Users\\xmman\\.nuget\\packages\\fluenticons.wpf\\2.0.316\\fluenticons.wpf.2.0.316.nupkg.sha512",
+    "C:\\Users\\xmman\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\xmman\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\xmman\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\xmman\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.22\\microsoft.netcore.app.host.win-x64.8.0.22.nupkg.sha512"
   ],
   "logs": []
 }

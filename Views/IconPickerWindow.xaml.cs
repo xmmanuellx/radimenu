@@ -10,13 +10,19 @@ public partial class IconPickerWindow : Window
     private List<IconItem> _allIcons = new();
     private Border? _selectedBorder;
     
+    // Legacy: System Icon
     public Symbol? SelectedSymbol { get; private set; }
+    
+    // New: Universal Icon Name (e.g. "Home" or "mdi:account")
     public string? SelectedIconName { get; private set; }
 
     public IconPickerWindow()
     {
         InitializeComponent();
         LoadIcons();
+        
+        // Subscribe to Online View events
+        OnlineView.IconSelected += OnOnlineIconSelected;
     }
 
     private void LoadIcons()
@@ -76,7 +82,7 @@ public partial class IconPickerWindow : Window
             border.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 120, 212));
             
             SelectedSymbol = item.Symbol;
-            SelectedIconName = item.Name;
+            SelectedIconName = item.Name; // Fluent icons don't need prefix
             SelectedLabel.Text = $"Seleccionado: {item.Name}";
             
             // Double-click to select
@@ -86,6 +92,14 @@ public partial class IconPickerWindow : Window
                 Close();
             }
         }
+    }
+
+    private void OnOnlineIconSelected(string iconName)
+    {
+        // Handle selection from the Online View
+        SelectedSymbol = null; // Clear system symbol
+        SelectedIconName = iconName; // e.g., "mdi:account"
+        SelectedLabel.Text = $"Seleccionado: {iconName}";
     }
 
     private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -111,7 +125,7 @@ public partial class IconPickerWindow : Window
 
     private void Select_Click(object sender, RoutedEventArgs e)
     {
-        if (SelectedSymbol.HasValue)
+        if (!string.IsNullOrEmpty(SelectedIconName))
         {
             DialogResult = true;
             Close();

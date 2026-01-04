@@ -119,8 +119,8 @@ public partial class MainWindow : Window
         if (!item.KeepOpen)
         {
             HideMenuImmediate();
-            // Small delay to ensure Windows OS switches focus back
-            await Task.Delay(150);
+            // Reduced delay to 10ms for responsiveness (was 300ms)
+            await Task.Delay(10);
         }
 
         if (!string.IsNullOrEmpty(item.Shortcut))
@@ -176,6 +176,12 @@ public partial class MainWindow : Window
     }
     public void ReloadSettings()
     {
-        RadialMenuControl.ReloadItems();
+        RadialMenuControl.RefreshMenu();
+    }
+    
+    public void ReloadMenu()
+    {
+        // Alias for ReloadSettings or direct call
+        RadialMenuControl.RefreshMenu();
     }
 }

@@ -20,5 +20,15 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                           Opacity="0.7"/>
+
+        <!-- Universal Icon (SVG Path) -->
+        <Path x:Name="UniversalIconPath"
+              Width="20" Height="20"
+              Fill="White"
+              Stretch="Uniform"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Opacity="0.7"
+              Visibility="Collapsed"/>
     </Grid>
 </UserControl>

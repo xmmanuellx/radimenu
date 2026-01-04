@@ -1,6 +1,8 @@
-Saving 5 items:
-  - media: SubItems=2
+Saving 7 items:
+  - Volume: SubItems=4
   - Copy: SubItems=0
-  - Paste: SubItems=0
   - TaskMgr: SubItems=0
+  - Paste: SubItems=0
   - Browser: SubItems=0
+  - chrome: SubItems=0
+  - Ditto: SubItems=0

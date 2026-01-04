@@ -1,0 +1,29 @@
+﻿  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos est├ín actualizados para la restauraci├│n.
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,36): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,42): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ConfigurationService.cs(36,12): warning CS8618: El elemento propiedad "CurrentSettings" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ConfigurationService.cs(54,35): warning CS8601: Posible asignaci├│n de referencia nula. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(536,31): warning CS8600: Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(539,35): warning CS8600: Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1656,32): error CS0104: 'Cursors' es una referencia ambigua entre 'System.Windows.Forms.Cursors' y 'System.Windows.Input.Cursors' [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1736,24): warning CS8602: Desreferencia de una referencia posiblemente NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1932,9): warning CS8602: Desreferencia de una referencia posiblemente NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ProcessMonitorService.cs(27,18): warning CS0169: El campo 'ProcessMonitorService._isDisposed' nunca se usa [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+
+ERROR al compilar.
+
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,36): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Views\SettingsWindow.xaml.cs(193,42): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ConfigurationService.cs(36,12): warning CS8618: El elemento propiedad "CurrentSettings" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ConfigurationService.cs(54,35): warning CS8601: Posible asignaci├│n de referencia nula. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(536,31): warning CS8600: Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(539,35): warning CS8600: Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1736,24): warning CS8602: Desreferencia de una referencia posiblemente NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1932,9): warning CS8602: Desreferencia de una referencia posiblemente NULL. [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Services\ProcessMonitorService.cs(27,18): warning CS0169: El campo 'ProcessMonitorService._isDisposed' nunca se usa [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+D:\code\radimenu\Controls\RadialMenu.xaml.cs(1656,32): error CS0104: 'Cursors' es una referencia ambigua entre 'System.Windows.Forms.Cursors' y 'System.Windows.Input.Cursors' [D:\code\radimenu\RadiMenu_gy423psy_wpftmp.csproj]
+    9 Advertencia(s)
+    1 Errores
+
+Tiempo transcurrido 00:00:01.28
