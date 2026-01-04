@@ -1176,6 +1176,7 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
                      var item = _submenuItems[_hoveredSubmenuIndex];
                      if (item.IsSubmenuOnly) OpenSubmenu(item);
                      else ItemSelected?.Invoke(this, item);
+                     e.Handled = true; // Prevent click from propagating to next window
                      return;
                  }
 
@@ -1204,6 +1205,7 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
                      var item = _submenuItems[subIndex];
                      if (item.IsSubmenuOnly) OpenSubmenu(item);
                      else ItemSelected?.Invoke(this, item);
+                     e.Handled = true;
                      return;
                  }
              }
@@ -1216,6 +1218,7 @@ public partial class RadialMenu : System.Windows.Controls.UserControl
                      var item = _items[_selectedIndex];
                      if (item.IsSubmenuOnly) OpenSubmenu(item);
                      else ItemSelected?.Invoke(this, item);
+                     e.Handled = true;
                  }
              }
              // Center Click
